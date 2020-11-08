@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" th:href="@{/carmax}">Carmax</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li th:if="not${#request.userPrincipal}" class="nav-item active">
+                        <a class="nav-link" th:href="@{/user/profile}"></a>
+                    </li>
+                    <li th:if="${#request.userPrincipal}" class="nav-item active">
+                        <a class="nav-link" th:href="@{/user/profile}"
+                           th:text="${#request.userPrincipal.getName()}">Home</a>
+                    </li>
+                </ul>
+            </div>
+            <div th:if="not${#request.userPrincipal}">
+                <form class="form-inline my-2 justify-content-end" method="get" th:action="@{/auth/login}">
+                    <button type="submit" class="btn my-2 btn-info">Sign in</button>
+                </form>
+            </div>
+            <div th:if="${#request.userPrincipal}">
+                <form class="form-inline my-2 justify-content-end" method="post" th:action="@{/auth/logout}">
+                    <button type="submit" class="btn my-2 btn-info">Sign out</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

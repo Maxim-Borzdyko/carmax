@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Info</title>
+
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+</head>
+<body>
+
+<div th:replace="/parts/navbar :: header"></div>
+
+<div class="container align-content-center border-success">
+    <form class="my-5" th:object="${car}">
+        <div class="form-group">
+            <label class="form-control-label" for="inputPrice">Price</label>
+            <input type="text" id="inputPrice" name="brand" th:value="${car.price}" readonly>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="inputBrand">Brand</label>
+            <input type="text" id="inputBrand" name="brand" th:value="${car.brand.name}" readonly>
+        </div>
+    </form>
+    <div th:if="${#request.isUserInRole('ROLE_orders.write')}">
+        <form action="/order/add" method="post">
+            <button class="btn-dark" type="submit">Make order</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>

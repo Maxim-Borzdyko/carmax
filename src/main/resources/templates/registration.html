@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+
+</head>
+<body>
+
+<div class="container align-content-center">
+    <form class="login100-form" method="post" action="/auth/registration" th:object="${user}">
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputEmail">Email</label>
+                <input type="email" class="form-control" id="inputEmail" name="username"
+                       placeholder="e-mail" th:field="*{email}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPassword">Password</label>
+                <input type="password" class="form-control" id="inputPassword" name="password"
+                       placeholder="password" th:field="*{password}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputFirstName">First name</label>
+                <input type="text" class="form-control" id="inputFirstName" name="firstName"
+                       placeholder="first name" th:field="*{firstName}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputSecondName">Second name</label>
+                <input type="text" class="form-control" id="inputSecondName" name="secondName"
+                       placeholder="second name" th:field="*{secondName}">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Complete</button>
+    </form>
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>

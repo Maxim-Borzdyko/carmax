@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Selects</title>
+</head>
+<body>
+
+<div th:fragment="select-brand">
+    <div class="container">
+        <div class="row my-5">
+            <div class="col">
+                <button id="btnDropDown" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    Select brand
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="btnDropDown">
+                    <a class="dropdown-item" th:each="brand : ${brands}" th:href="@{'/carmax?brand=' + ${brand.id}}"
+                       th:text="${brand.name}"></a>
+                </div>
+            </div>
+            <div class="col">
+                <button id="btnDropDownSort" type="button" class="btn btn-secondary dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    Sort by
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnDropDownSort">
+                    <a class="dropdown-item" th:href="@{'/carmax?sort=' + color}">Color</a>
+                    <a class="dropdown-item" th:href="@{'/carmax?sort=' + price}">Price</a>
+                </div>
+            </div>
+            <div class="col">
+                <form class="form-inline justify-content-end" method="get" th:action="@{/carmax/find}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

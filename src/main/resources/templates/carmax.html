@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Carmax</title>
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+</head>
+<body>
+
+<div th:replace="/parts/navbar :: header"></div>
+
+<div th:replace="/parts/categories :: select-brand"></div>
+
+<div class="container">
+    <div class="row justify-content-center" th:if="${cars.isEmpty()}">
+        <h3 class="h3"> There is no cars with chosen category</h3>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3">
+        <div class="col mb-2" th:each="car : ${cars}">
+            <div class="card text-white bg-dark my-3">
+                <img src="..." class="card-img-top">
+                <div class="card-body">
+                    <h4 class="card-title" th:text="${car.color.name}"></h4>
+                    <p class="card-text text-white" th:text="${car.brand.name}"></p>
+                    <p class="card-text text-white" th:text="${car.price}"></p>
+                    <p class="card-text text-white" th:text="${car.fuel.type}"></p>
+                    <form th:action="@{'/carmax/' + ${car.id} + '/more/'}" method="get">
+                        <button type="submit" class="btn btn-dark border-white mb-1">More</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>

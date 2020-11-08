@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+</head>
+<body>
+
+<div class="container align-content-center justify-content-center">
+    <form class="from-signin" th:action="@{/auth/login}" method="post">
+        <div class="form-group">
+            <label for="inputEmail">Email address</label>
+            <input type="email" name="username" class="form-control" id="inputEmail" aria-describedby="emailHelp"
+                   placeholder="e-mail">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Password</label>
+            <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
+    <form th:action="@{/auth/registration}" method="get">
+        <button class="btn-dark" type="submit">Registration</button>
+    </form>
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>
