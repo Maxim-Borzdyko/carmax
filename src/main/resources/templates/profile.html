@@ -12,7 +12,7 @@
 <div th:replace="/parts/navbar :: header"></div>
 
 <div class="container align-content-center">
-    <form method="post" th:action="@{/user/update}" th:object="${user}">
+    <form class="w-50" method="post" th:action="@{/user/update}" th:object="${user}">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="inputFirstName">First name</label>
@@ -32,7 +32,10 @@
                        th:field="*{email}">
             </div>
         </div>
-        <button type="submit" class="btn btn-success">Complete</button>
+
+        <button type="button" class="btn btn-primary" style="width: 100px" data-toggle="modal" data-target="#userModal">
+            Edit
+        </button>
     </form>
 
     <form method="get" th:action="@{/carmax/add}">
@@ -42,8 +45,9 @@
         </div>
         <a class="btn btn-dark my-2" th:href="@{/orders}">Order list</a>
     </form>
-
 </div>
+
+<div th:replace="/parts/user :: modal"></div>
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
 
