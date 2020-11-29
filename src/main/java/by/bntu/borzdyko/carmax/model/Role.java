@@ -10,12 +10,12 @@ public enum Role {
     USER(Set.of(
             Permission.CARS_READ,
             Permission.USERS_UPDATE,
-            Permission.ORDERS_WRITE)
+            Permission.ORDERS_ADD, Permission.ORDERS_DELETE)
     ),
     ADMIN(Set.of(
             Permission.CARS_READ, Permission.CARS_WRITE, Permission.CARS_DELETE,
-            Permission.USERS_READ, Permission.USERS_UPDATE, Permission.USERS_DELETE,
-            Permission.ORDERS_READ, Permission.ORDERS_WRITE, Permission.ORDERS_DELETE)
+            Permission.USERS_READ, Permission.USERS_UPDATE, Permission.USERS_DELETE, Permission.USERS_BAN,
+            Permission.ORDERS_READ, Permission.ORDERS_UPDATE, Permission.ORDERS_ADD, Permission.ORDERS_DELETE)
     );
 
     private final Set<Permission> permissions;

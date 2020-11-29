@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Info</title>
+    <title>Car info</title>
 
     <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
 </head>
@@ -11,21 +11,31 @@
 <div th:replace="/parts/navbar :: header"></div>
 
 <div class="container align-content-center border-success">
-    <form class="my-5" th:object="${car}">
+    <form class="my-5" method="post" th:action="@{/orders/add}" th:object="${car}">
+
+        <input type="hidden" name="id" th:value="*{id}" readonly>
+
         <div class="form-group">
             <label class="form-control-label" for="inputPrice">Price</label>
-            <input type="text" id="inputPrice" name="brand" th:value="${car.price}" readonly>
+            <input type="text" id="inputPrice" th:value="*{price}" readonly>
         </div>
         <div class="form-group">
             <label class="form-control-label" for="inputBrand">Brand</label>
-            <input type="text" id="inputBrand" name="brand" th:value="${car.brand.name}" readonly>
+            <input type="text" id="inputBrand" th:value="*{brand.name}" readonly>
         </div>
-    </form>
-    <div th:if="${#request.isUserInRole('ROLE_orders.write')}">
-        <form action="/order/add" method="post">
+        <div class="form-group">
+            <label class="form-control-label" for="inputColor">Color</label>
+            <input type="text" id="inputColor" th:value="*{color.name}" readonly>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="inputFuel">Fuel type</label>
+            <input type="text" id="inputFuel" th:value="*{fuel.type}" readonly>
+        </div>
+
+<!--        <div th:if="${#request.isUserInRole('ROLE_orders.write')}">-->
             <button class="btn-dark" type="submit">Make order</button>
-        </form>
-    </div>
+<!--        </div>-->
+    </form>
 </div>
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>

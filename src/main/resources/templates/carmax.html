@@ -17,18 +17,28 @@
     </div>
     <div class="row row-cols-1 row-cols-md-3">
         <div class="col mb-2" th:each="car : ${cars}">
+
             <div class="card text-white bg-dark my-3">
-                <img src="..." class="card-img-top">
+
+                <img th:if="${car.fileName}" th:src="@{'/img/' + ${car.fileName}}" class="card-img-top"
+                     style="height: 200px; object-fit: cover">
+
                 <div class="card-body">
-                    <h4 class="card-title" th:text="${car.color.name}"></h4>
-                    <p class="card-text text-white" th:text="${car.brand.name}"></p>
-                    <p class="card-text text-white" th:text="${car.price}"></p>
-                    <p class="card-text text-white" th:text="${car.fuel.type}"></p>
-                    <form th:action="@{'/carmax/' + ${car.id} + '/more/'}" method="get">
-                        <button type="submit" class="btn btn-dark border-white mb-1">More</button>
-                    </form>
+
+                    <h4 class="card-text text-white" th:text="${car.brand.name} + ' ' + ${car.model.name}"></h4>
+                    <p class="card-title" th:text="'Color is: ' + ${car.color.name}"></p>
+                    <p class="card-text text-white" th:text="'Price is: ' + ${car.price}"></p>
+
+                    <div class="container justify-content-end">
+                        <form th:action="@{'/carmax/' + ${car.id} + '/more'}" method="get">
+                            <button type="submit" class="btn btn-dark border-white mb-1">More</button>
+                        </form>
+                    </div>
+
                 </div>
+
             </div>
+
         </div>
     </div>
 

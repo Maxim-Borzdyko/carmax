@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
@@ -14,13 +15,6 @@
     <form method="post" th:action="@{/user/update}" th:object="${user}">
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="inputEmail">Email</label>
-                <input type="email" class="form-control" id="inputEmail" name="username"
-                       th:field="*{email}">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
                 <label for="inputFirstName">First name</label>
                 <input type="text" class="form-control" id="inputFirstName" name="firstName"
                        th:field="*{firstName}">
@@ -30,41 +24,25 @@
                 <input type="text" class="form-control" id="inputSecondName" name="secondName"
                        th:field="*{secondName}">
             </div>
-
-            <button type="submit" class="btn btn-success">Complete</button>
         </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputEmail">Email</label>
+                <input type="email" class="form-control" id="inputEmail" name="username"
+                       th:field="*{email}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Complete</button>
     </form>
 
-    <div class="row" th:each="user : ${users}">
-        <div class="col">
-            <p class="btn-outline-info" th:text="${user.email}"></p>
+    <form method="get" th:action="@{/carmax/add}">
+        <div th:if="${#request.isUserInRole('ADMIN')}">
+            <button class="btn btn-success my-2" type="submit">Add car</button>
+            <a class="btn btn-dark" th:href="@{/user}">User list</a>
         </div>
-        <div class="col">
-            <p class="btn-outline-info" th:text="${user.firstName}"></p>
-        </div>
-        <div class="col">
-            <p class="btn-outline-info" th:text="${user.status}"></p>
-        </div>
-        <div class="col">
-            <form method="get" th:action="@{'/user/' + ${user.id} + '/delete'}">
-                <button class="btn-dark" type="submit">Delete user</button>
-            </form>
-        </div>
-    </div>
+        <a class="btn btn-dark my-2" th:href="@{/orders}">Order list</a>
+    </form>
 
-    <div class="row" th:each="order : ${orders}">
-        <div class="col">
-            <p class="btn-outline-info" th:text="${order.user.email}"></p>
-        </div>
-        <div class="col">
-            <p class="btn-outline-info" th:text="${order.car.color.name}"></p>
-        </div>
-        <div class="col">
-            <form method="get" th:action="@{'/order/' + ${order.id} + '/delete'}">
-                <button class="btn-dark" type="submit">Delete order</button>
-            </form>
-        </div>
-    </div>
 </div>
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
