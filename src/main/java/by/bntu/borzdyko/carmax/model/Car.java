@@ -3,7 +3,6 @@ package by.bntu.borzdyko.carmax.model;
 import by.bntu.borzdyko.carmax.model.description.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Proxy;
@@ -32,6 +31,9 @@ public class Car {
 
     @Column(name = "mileage")
     private Double mileage;
+
+    @Column(name = "file_name")
+    private String fileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id")
