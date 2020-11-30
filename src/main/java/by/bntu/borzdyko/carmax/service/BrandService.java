@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,6 +17,14 @@ public class BrandService {
     @Autowired
     public BrandService(BrandRepository brandRepository) {
         this.brandRepository = brandRepository;
+    }
+
+    public Brand getOne(Long id) {
+        return brandRepository.getOne(id);
+    }
+
+    public List<Brand> getAll() {
+        return brandRepository.findAll();
     }
 
     public boolean isBrandEmpty(Brand brand) {
