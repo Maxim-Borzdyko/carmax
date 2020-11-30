@@ -15,6 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_item")
 @Proxy(lazy = false)
+@Builder
 public class Order {
 
     @Id

@@ -1,6 +1,7 @@
 package by.bntu.borzdyko.carmax.service;
 
 import by.bntu.borzdyko.carmax.model.Order;
+import by.bntu.borzdyko.carmax.model.User;
 import by.bntu.borzdyko.carmax.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,10 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
+    public Order findOne(Long id) {
+        return orderRepository.getOne(id);
+    }
+
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
@@ -35,5 +40,13 @@ public class OrderService {
 
     public List<Order> findActiveOrders() {
         return orderRepository.findAllByStatus(ACTIVE);
+    }
+
+    public List<Order> findUserOrders(User user) {
+        return orderRepository.findAllByUser(user);
+    }
+
+    public boolean isPresent(Order order) {
+        return orderRepository.findByCarAndUser(order.getCar(), order.getUser()).isPresent();
     }
 }
