@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Carmax</title>
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+</head>
+<body>
+<div th:replace="/parts/navbar :: header"></div>
+
+<div class="container">
+    <div class="row my-3 justify-content-end">
+        <button type="button" class="btn btn-primary mx-2" style="width: 100px" data-toggle="modal"
+                data-target="#carModal">
+            Add car
+        </button>
+        <a class="btn btn-info mx-2" th:href="@{/user/profile}">To profile</a>
+    </div>
+
+    <div class="row my-2 justify-content-center" th:if="${cars.isEmpty()}">
+        <h3> There are no any cars yet!</h3>
+    </div>
+
+    <div th:unless="${cars.isEmpty()}">
+        <table class="table table-dark">
+            <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Image</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Model</th>
+                <th scope="col">Price</th>
+                <th scope="col">Color</th>
+                <th scope="col">Transmission</th>
+                <th scope="col">Fuel</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="car : ${cars}">
+                <th scope="row" th:text="${car.id}"></th>
+                <td>
+                    <img th:if="${car.fileName}" th:src="@{'/img/' + ${car.fileName}}" class="card-img-top"
+                         style="height: 45px; width: 45px; object-fit: cover">
+                </td>
+                <td th:text="${car.brand.name}"></td>
+                <td th:text="${car.model.name}"></td>
+                <td th:text="${car.price}"></td>
+                <td th:text="${car.color.name}"></td>
+                <td th:text="${car.transmission.type}"></td>
+                <td th:text="${car.fuel.type}"></td>
+                <td>
+                    <div class="row">
+                        <form method="post" th:action="@{/carmax/edit}">
+                            <input type="hidden" name="id" th:value="${car.id}" readonly>
+                            <button class="btn btn-info mx-2" type="submit">Edit</button>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <form th:method="delete" th:action="@{'/carmax/' + ${car.id} + '/delete'}">
+                            <button class="btn btn-danger mx-2" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="/parts/car :: modal"></div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>

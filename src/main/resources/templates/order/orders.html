@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Carmax</title>
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+</head>
+<body>
+<div th:replace="/parts/navbar :: header"></div>
+
+<div class="container">
+    <div class="row my-3 justify-content-end">
+        <a class="btn btn-info" th:href="@{/user/profile}">To profile</a>
+    </div>
+
+    <div class="row my-2 justify-content-center" th:if="${orders.isEmpty()}">
+        <h3> There are no any orders yet!</h3>
+    </div>
+
+    <div th:unless="${orders.isEmpty()}">
+        <table class="table table-dark">
+            <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Image</th>
+                <th scope="col">User email</th>
+                <th scope="col">Car brand</th>
+                <th scope="col">Car price</th>
+                <th scope="col">Order status</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <th scope="row" th:text="${order.id}"></th>
+                <td>
+                    <img th:if="${order.car.fileName}" th:src="@{'/img/' + ${order.car.fileName}}" class="card-img-top"
+                         style="height: 45px; width: 45px; object-fit: cover">
+                </td>
+                <td th:text="${order.user.email}"></td>
+                <td th:text="${order.car.brand.name}"></td>
+                <td th:text="${order.car.price}"></td>
+                <td>
+                    <div th:if="${order.status}">
+                        Active
+                    </div>
+                    <div th:unless="${order.status}">
+                        Not active
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div th:if="${isAdmin}">
+                            <div th:unless="${order.status}">
+                                <form method="post" th:action="@{/orders/confirm}">
+                                    <input type="hidden" name="id" th:value="${order.id}" readonly>
+                                    <button class="btn btn-success mx-2" type="submit">Confirm</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <form th:method="delete" th:action="@{'/orders/' + ${order.id} + '/delete'}">
+                            <button class="btn btn-danger mx-2" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>
