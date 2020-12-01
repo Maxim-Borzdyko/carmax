@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Car modal</title>
+
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+
+</head>
+<body>
+
+<div th:fragment="modal">
+    <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="carModalEdit" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="carModalEdit">Add car</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" th:action="@{/carmax/add}" th:object="${car}">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputPrice">Price</label>
+                                <input type="text" class="form-control" id="inputPrice" name="price"
+                                th:field="*{price}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputYear">Year</label>
+                                <input type="text" class="form-control" id="inputYear" name="yearOfIssue"
+                                th:field="*{yearOfIssue}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputMileage">Mileage</label>
+                                <input type="text" class="form-control" id="inputMileage" name="mileage"
+                                th:field="*{mileage}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <select required class="custom-select" id="inputBrand" name="brand">
+                                    <option disabled selected value="">Select brand</option>
+                                    <option class="dropdown-item" th:each="brand:${brands}" th:text="${brand.name}"
+                                            th:value="${brand.id}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select required class="custom-select" id="inputColor" name="color">
+                                    <option disabled selected value="">Select color</option>
+                                    <option class="dropdown-item" th:each="color:${colors}" th:text="${color.name}"
+                                            th:value="${color.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <select required class="custom-select" id="inputModel" name="model">
+                                    <option disabled selected value="">Select model</option>
+                                    <option class="dropdown-item" th:each="model:${models}" th:text="${model.name}"
+                                            th:value="${model.id}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select required class="custom-select" id="inputCountry" name="country">
+                                    <option disabled selected value="">Select country</option>
+                                    <option class="dropdown-item" th:each="country:${countries}" th:text="${country.name}"
+                                            th:value="${country.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <select required class="custom-select" id="inputTransmission" name="transmission">
+                                    <option disabled selected value="">Select transmission</option>
+                                    <option class="dropdown-item" th:each="trans:${transmissions}" th:text="${trans.type}"
+                                            th:value="${trans.id}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select required class="custom-select" id="inputFuel" name="fuel">
+                                    <option disabled selected value="">Select fuel</option>
+                                    <option class="dropdown-item" th:each="fuel:${fuels}" th:text="${fuel.type}"
+                                            th:value="${fuel.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Add car</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="filter-modal">
+    <div class="modal fade" id="carFilter" tabindex="-1" aria-labelledby="carModalFilter" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="carModalFilter">Filter cars</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="get" th:action="@{/carmax}">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6 w-50">
+                                <select class="custom-select" id="selectBrand" name="brand">
+                                    <option disabled selected value="">Select brand</option>
+                                    <option class="dropdown-item" th:each="brand:${brands}" th:text="${brand.name}"
+                                            th:value="${brand.id}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 w-50">
+                                <select class="custom-select" id="selectSort" name="sort">
+                                    <option disabled selected value="">Sort by</option>
+                                    <option class="dropdown-item" th:text="Color" th:value="color"></option>
+                                    <option class="dropdown-item" th:text="Price" th:value="price"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Find</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>

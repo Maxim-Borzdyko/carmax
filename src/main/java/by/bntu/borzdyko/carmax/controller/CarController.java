@@ -2,7 +2,7 @@ package by.bntu.borzdyko.carmax.controller;
 
 import by.bntu.borzdyko.carmax.model.Car;
 import by.bntu.borzdyko.carmax.model.description.Brand;
-import by.bntu.borzdyko.carmax.service.CarService;
+import by.bntu.borzdyko.carmax.service.*;
 import by.bntu.borzdyko.carmax.util.CarFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,31 +10,42 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/carmax")
 public class CarController {
 
     private final CarService carService;
+    private final BrandService brandService;
+    private final ColorService colorService;
+    private final ModelService modelService;
+    private final CountryService countryService;
+    private final TransmissionService transmissionService;
+    private final FuelService fuelService;
+
     private final CarFilter carFilter;
 
     @Autowired
-    public CarController(CarService carService, CarFilter carFilter) {
+    public CarController(CarService carService, BrandService brandService,
+                         ColorService colorService, ModelService modelService, CountryService countryService,
+                         TransmissionService transmissionService, FuelService fuelService, CarFilter carFilter) {
         this.carService = carService;
+        this.brandService = brandService;
+        this.colorService = colorService;
+        this.modelService = modelService;
+        this.countryService = countryService;
+        this.transmissionService = transmissionService;
+        this.fuelService = fuelService;
         this.carFilter = carFilter;
     }
 
     @GetMapping
     public String getMainPage(@RequestParam(value = "brand", required = false) Brand brand,
-                              @RequestParam(value = "sort", required = false) String sortType,
+                              @RequestParam(value = "sort", required = false) String sort,
                               Model model) {
-        model.addAttribute("brands", carService.findAllBrands());
-
-        if (sortType == null) {
-            model.addAttribute("cars", carFilter.filterByBrand(brand));
-        } else {
-            model.addAttribute("cars", carService.sortByType(sortType));
-        }
-
+        model.addAttribute("brands", brandService.getAll());
+        model.addAttribute("cars", carFilter.filter(brand, sort));
         return "carmax";
     }
 
@@ -44,34 +55,38 @@ public class CarController {
         return "more";
     }
 
-    // TODO Add new Car get
-    @GetMapping("/add")
+    @GetMapping("/list")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String addNewCar(Model model) {
+    public String getCars(Model model) {
         model.addAttribute("car", new Car());
-        return "";
+        model.addAttribute("cars", carService.findAll());
+        model.addAttribute("brands", brandService.getAll());
+        model.addAttribute("colors", colorService.getAll());
+        model.addAttribute("countries", countryService.getAll());
+        model.addAttribute("models", modelService.getAll());
+        model.addAttribute("transmissions", transmissionService.getAll());
+        model.addAttribute("fuels", fuelService.getAll());
+        return "car/cars";
     }
 
-    // TODO Add new Car post
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String addNewCar(@ModelAttribute("car") Car car) {
+    public String addCar(@ModelAttribute Car car) {
         carService.addCar(car);
-        return "redirect:/carmax";
+        return "redirect:carmax/list";
     }
 
-    @GetMapping("/{id}/delete")
+    @PostMapping("/edit")
+    @PreAuthorize("hasAuthority('cars.write')")
+    public String editCar(@ModelAttribute("id") Car car) {
+        carService.save(car);
+        return "redirect:/carmax/list";
+    }
+
+    @DeleteMapping("/{id}/delete")
     @PreAuthorize("hasAuthority('cars.delete')")
     public String deleteCar(@PathVariable("id") Car car) {
         carService.delete(car);
-        return "redirect:/carmax";
-    }
-
-    @PostMapping("/{id}/update")
-    @PreAuthorize("hasAuthority('cars.write')")
-    public String updateUser(@PathVariable("id") Car car,
-                             @ModelAttribute("car") Car newCar) {
-        carService.updateCar(car, newCar);
-        return "redirect:/carmax";
+        return "redirect:/carmax/list";
     }
 }

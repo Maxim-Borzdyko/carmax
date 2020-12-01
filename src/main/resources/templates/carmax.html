@@ -9,40 +9,42 @@
 
 <div th:replace="/parts/navbar :: header"></div>
 
-<div th:replace="/parts/categories :: select-brand"></div>
-
 <div class="container">
+    <div class="row my-2 justify-content-end">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#carFilter">
+            Find cars
+        </button>
+    </div>
+
     <div class="row justify-content-center" th:if="${cars.isEmpty()}">
         <h3 class="h3"> There is no cars with chosen category</h3>
     </div>
+
     <div class="row row-cols-1 row-cols-md-3">
         <div class="col mb-2" th:each="car : ${cars}">
 
-            <div class="card text-white bg-dark my-3">
+            <div class="card text-white bg-dark my-3" style="opacity: 90%">
 
                 <img th:if="${car.fileName}" th:src="@{'/img/' + ${car.fileName}}" class="card-img-top"
                      style="height: 200px; object-fit: cover">
 
                 <div class="card-body">
 
-                    <h4 class="card-text text-white" th:text="${car.brand.name} + ' ' + ${car.model.name}"></h4>
-                    <p class="card-title" th:text="'Color is: ' + ${car.color.name}"></p>
-                    <p class="card-text text-white" th:text="'Price is: ' + ${car.price}"></p>
+                    <h4 class="card-text text-center" th:text="${car.brand.name} + ' ' + ${car.model.name}"></h4>
+                    <h6 class="card-text" th:text="'Color: ' + ${car.color.name}"></h6>
+                    <h6 class="card-text" th:text="'Price: ' + ${car.price}"></h6>
 
-                    <div class="container justify-content-end">
-                        <form th:action="@{'/carmax/' + ${car.id} + '/more'}" method="get">
-                            <button type="submit" class="btn btn-dark border-white mb-1">More</button>
-                        </form>
-                    </div>
-
+                    <form th:action="@{'/carmax/' + ${car.id} + '/more'}" method="get">
+                        <button type="submit" class="btn btn-dark border-white my-2 font-weight-bold float-right">More
+                        </button>
+                    </form>
                 </div>
-
             </div>
-
         </div>
     </div>
-
 </div>
+
+<div th:replace="/parts/car :: filter-modal"></div>
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
 
