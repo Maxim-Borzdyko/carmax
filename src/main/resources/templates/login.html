@@ -8,24 +8,28 @@
 </head>
 <body>
 
-<div class="container align-content-center justify-content-center">
-    <form class="from-signin" th:action="@{/auth/login}" method="post">
-        <div class="form-group">
-            <label for="inputEmail">Email address</label>
-            <input type="email" name="username" class="form-control" id="inputEmail" aria-describedby="emailHelp"
-                   placeholder="e-mail">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group">
-            <label for="inputPassword">Password</label>
-            <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Sign in</button>
-    </form>
-    <div class="my-5">
-        <form th:action="@{/auth/registration}" method="get">
-            <button class="btn-dark" type="submit">Registration</button>
+<div class="container position-fixed" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="row justify-content-center">
+        <h3>Log in</h3>
+    </div>
+    <div class="row justify-content-center">
+        <form class="pt-30" th:action="@{/auth/login}" method="post">
+            <div class="form-group">
+                <label for="inputEmail">Email address</label>
+                <input type="email" name="username" class="form-control" id="inputEmail" aria-describedby="emailHelp"
+                       placeholder="e-mail">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password</label>
+                <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password">
+            </div>
+            <button type="submit" class="form-control btn btn-primary justify-content-center mt-2">Sign in</button>
         </form>
+    </div>
+    <div class="row justify-content-center">
+        <a class="btn btn-dark mt-2" th:href="@{/auth/registration}">Registration</a>
     </div>
 </div>
 
