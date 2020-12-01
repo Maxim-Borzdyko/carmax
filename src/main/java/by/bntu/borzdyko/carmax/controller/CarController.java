@@ -9,8 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/carmax")
@@ -25,11 +24,13 @@ public class CarController {
     private final FuelService fuelService;
 
     private final CarFilter carFilter;
+    private final FileService fileService;
 
     @Autowired
     public CarController(CarService carService, BrandService brandService,
                          ColorService colorService, ModelService modelService, CountryService countryService,
-                         TransmissionService transmissionService, FuelService fuelService, CarFilter carFilter) {
+                         TransmissionService transmissionService, FuelService fuelService, CarFilter carFilter,
+                         FileService fileService) {
         this.carService = carService;
         this.brandService = brandService;
         this.colorService = colorService;
@@ -38,6 +39,7 @@ public class CarController {
         this.transmissionService = transmissionService;
         this.fuelService = fuelService;
         this.carFilter = carFilter;
+        this.fileService = fileService;
     }
 
     @GetMapping
@@ -71,9 +73,11 @@ public class CarController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String addCar(@ModelAttribute Car car) {
+    public String addCar(@ModelAttribute Car car,
+                         @RequestParam("file") MultipartFile file) {
+        car.setFileName(fileService.saveImage(file));
         carService.addCar(car);
-        return "redirect:carmax/list";
+        return "redirect:/carmax/list";
     }
 
     @PostMapping("/edit")
@@ -86,6 +90,7 @@ public class CarController {
     @DeleteMapping("/{id}/delete")
     @PreAuthorize("hasAuthority('cars.delete')")
     public String deleteCar(@PathVariable("id") Car car) {
+        fileService.deleteImage(car.getFileName());
         carService.delete(car);
         return "redirect:/carmax/list";
     }

@@ -19,7 +19,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" th:action="@{/carmax/add}" th:object="${car}">
+                <form method="post" th:action="@{/carmax/add}" th:object="${car}" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-6">
@@ -84,6 +84,11 @@
                                     <option class="dropdown-item" th:each="fuel:${fuels}" th:text="${fuel.type}"
                                             th:value="${fuel.id}"></option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="file" name="file">
                             </div>
                         </div>
                     </div>
