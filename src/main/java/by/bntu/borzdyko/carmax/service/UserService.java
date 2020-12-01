@@ -25,12 +25,20 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public User findOne(Long id) {
+        return userRepository.getOne(id);
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     public void delete(User user) {
         userRepository.delete(user);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 
     public List<User> findAllByRole(Role role) {
