@@ -10,8 +10,7 @@
 
 <div class="container">
     <div class="row my-3 justify-content-end">
-        <button type="button" class="btn btn-primary mx-2" style="width: 100px" data-toggle="modal"
-                data-target="#carModal">
+        <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#carModal">
             Add car
         </button>
         <a class="btn btn-info mx-2" th:href="@{/user/profile}">To profile</a>
@@ -52,7 +51,7 @@
                 <td th:text="${car.fuel.type}"></td>
                 <td>
                     <div class="row">
-                        <form method="post" th:action="@{/carmax/edit}">
+                        <form method="get" th:action="@{/carmax/edit}">
                             <input type="hidden" name="id" th:value="${car.id}" readonly>
                             <button class="btn btn-info mx-2" type="submit">Edit</button>
                         </form>

@@ -80,9 +80,30 @@ public class CarController {
         return "redirect:/carmax/list";
     }
 
+    @GetMapping("/edit")
+    @PreAuthorize("hasAuthority('cars.write')")
+    public String getEditPage(@ModelAttribute Car car, Model model) {
+        model.addAttribute("car", carService.findOne(car.getId()));
+        model.addAttribute("cars", carService.findAll());
+        model.addAttribute("brands", brandService.getAll());
+        model.addAttribute("colors", colorService.getAll());
+        model.addAttribute("countries", countryService.getAll());
+        model.addAttribute("models", modelService.getAll());
+        model.addAttribute("transmissions", transmissionService.getAll());
+        model.addAttribute("fuels", fuelService.getAll());
+        return "car/edit";
+    }
+
     @PostMapping("/edit")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String editCar(@ModelAttribute("id") Car car) {
+    public String editCar(@ModelAttribute("car") Car car,
+                          @RequestParam("file") MultipartFile file) {
+        if (!file.isEmpty()) {
+            if (car.getFileName() != null) {
+                fileService.deleteImage(car.getFileName());
+            }
+            car.setFileName(fileService.saveImage(file));
+        }
         carService.save(car);
         return "redirect:/carmax/list";
     }

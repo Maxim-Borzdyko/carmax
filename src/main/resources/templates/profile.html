@@ -11,40 +11,39 @@
 
 <div th:replace="/parts/navbar :: header"></div>
 
-<div class="container align-content-center">
-    <form class="w-50" method="post" th:action="@{/user/update}" th:object="${user}">
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="inputFirstName">First name</label>
-                <input type="text" class="form-control" id="inputFirstName" name="firstName"
-                       th:field="*{firstName}">
+<div class="container">
+    <div class="row justify-content-center">
+        <form class="pt-30 my-5" method="post" th:action="@{/user/update}" th:object="${user}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="inputFirstName">First name</label>
+                    <input type="text" class="form-control" id="inputFirstName" name="firstName"
+                           th:field="*{firstName}" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputSecondName">Second name</label>
+                    <input type="text" class="form-control" id="inputSecondName" name="secondName"
+                           th:field="*{secondName}" readonly>
+                </div>
             </div>
-            <div class="form-group col-md-6">
-                <label for="inputSecondName">Second name</label>
-                <input type="text" class="form-control" id="inputSecondName" name="secondName"
-                       th:field="*{secondName}">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" name="username"
+                           th:field="*{email}" readonly>
+                </div>
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="inputEmail">Email</label>
-                <input type="email" class="form-control" id="inputEmail" name="username"
-                       th:field="*{email}">
-            </div>
-        </div>
-
+        </form>
+    </div>
+    <div class="row justify-content-center">
         <button type="button" class="btn btn-primary" style="width: 100px" data-toggle="modal" data-target="#userModal">
             Edit
         </button>
-    </form>
+    </div>
 
-    <form method="get" th:action="@{/carmax/add}">
-        <div th:if="${#request.isUserInRole('ADMIN')}">
-            <button class="btn btn-success my-2" type="submit">Add car</button>
-            <a class="btn btn-dark" th:href="@{/user}">User list</a>
-        </div>
-        <a class="btn btn-dark my-2" th:href="@{/orders}">Order list</a>
-    </form>
+    <a class="btn btn-dark" th:href="@{/user}">User list</a>
+    <a class="btn btn-dark my-2" th:href="@{/orders}">Order list</a>
+    <a class="btn btn-dark my-2" th:href="@{/carmax/list}">Car list</a>
 </div>
 
 <div th:replace="/parts/user :: modal"></div>

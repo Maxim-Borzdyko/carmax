@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit car</title>
+
+    <th:block th:replace="/parts/bootstrap :: boot-css"></th:block>
+</head>
+<body>
+<div class="container position-fixed" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="row justify-content-center">
+        Edit car
+    </div>
+    <div class="row justify-content-center">
+        <form class="w-50" method="post" th:action="@{/carmax/edit}" th:object="${car}" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="*{id}" readonly>
+            <input type="hidden" name="fileName" th:value="*{fileName}" readonly>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputPrice">Price</label>
+                    <input type="text" class="form-control" id="inputPrice" name="price" th:field="*{price}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputYear">Year</label>
+                    <input type="text" class="form-control" id="inputYear" name="yearOfIssue" th:field="*{yearOfIssue}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputMileage">mileage</label>
+                    <input type="text" class="form-control" id="inputMileage" name="mileage" th:field="*{mileage}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputBrand">Brand</label>
+                    <select class="custom-select" id="inputBrand" name="brand">
+                        <option selected th:value="${car.brand.id}" th:text="${car.brand.name}"></option>
+                        <option class="dropdown-item" th:each="brand:${brands}" th:text="${brand.name}"
+                                th:value="${brand.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputColor">Color</label>
+                    <select class="custom-select" id="inputColor" name="color" >
+                        <option selected th:value="${car.color.id}" th:text="${car.color.name}"></option>
+                        <option class="dropdown-item" th:each="color:${colors}" th:text="${color.name}"
+                                th:value="${color.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputModel">Model</label>
+                    <select class="custom-select" id="inputModel" name="model">
+                        <option selected th:value="${car.model.id}" th:text="${car.model.name}"></option>
+                        <option class="dropdown-item" th:each="model:${models}" th:text="${model.name}"
+                                th:value="${model.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputCountry">Country</label>
+                    <select class="custom-select" id="inputCountry" name="country">
+                        <option selected th:value="${car.country.id}" th:text="${car.country.name}"></option>
+                        <option class="dropdown-item" th:each="country:${countries}" th:text="${country.name}"
+                                th:value="${country.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputTransmission">Transmission</label>
+                    <select class="custom-select" id="inputTransmission" name="transmission">
+                        <option selected th:value="${car.transmission.id}"
+                                th:text="${car.transmission.type}"></option>
+                        <option class="dropdown-item" th:each="trans:${transmissions}" th:text="${trans.type}"
+                                th:value="${trans.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputFuel">Fuel</label>
+                    <select class="custom-select" id="inputFuel" name="fuel">
+                        <option selected th:value="${car.fuel.id}" th:text="${car.fuel.type}"></option>
+                        <option class="dropdown-item" th:each="fuel:${fuels}" th:text="${fuel.type}"
+                                th:value="${fuel.id}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <img th:if="${car.fileName}" th:src="@{'/img/' + ${car.fileName}}"
+                         style="height: 60px; width: 60px; object-fit: cover">
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="file" name="file">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary float-right">Edit car</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="/parts/bootstrap :: boot-js"></div>
+
+</body>
+</html>
