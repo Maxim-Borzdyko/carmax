@@ -61,13 +61,7 @@ public class CarController {
     @PreAuthorize("hasAuthority('cars.write')")
     public String getCars(Model model) {
         model.addAttribute("car", new Car());
-        model.addAttribute("cars", carService.findAll());
-        model.addAttribute("brands", brandService.getAll());
-        model.addAttribute("colors", colorService.getAll());
-        model.addAttribute("countries", countryService.getAll());
-        model.addAttribute("models", modelService.getAll());
-        model.addAttribute("transmissions", transmissionService.getAll());
-        model.addAttribute("fuels", fuelService.getAll());
+        getAllCategories(model);
         return "car/cars";
     }
 
@@ -84,13 +78,7 @@ public class CarController {
     @PreAuthorize("hasAuthority('cars.write')")
     public String getEditPage(@ModelAttribute Car car, Model model) {
         model.addAttribute("car", carService.findOne(car.getId()));
-        model.addAttribute("cars", carService.findAll());
-        model.addAttribute("brands", brandService.getAll());
-        model.addAttribute("colors", colorService.getAll());
-        model.addAttribute("countries", countryService.getAll());
-        model.addAttribute("models", modelService.getAll());
-        model.addAttribute("transmissions", transmissionService.getAll());
-        model.addAttribute("fuels", fuelService.getAll());
+        getAllCategories(model);
         return "car/edit";
     }
 
@@ -114,5 +102,15 @@ public class CarController {
         fileService.deleteImage(car.getFileName());
         carService.delete(car);
         return "redirect:/carmax/list";
+    }
+
+    private void getAllCategories(Model model) {
+        model.addAttribute("cars", carService.findAll());
+        model.addAttribute("brands", brandService.getAll());
+        model.addAttribute("colors", colorService.getAll());
+        model.addAttribute("countries", countryService.getAll());
+        model.addAttribute("models", modelService.getAll());
+        model.addAttribute("transmissions", transmissionService.getAll());
+        model.addAttribute("fuels", fuelService.getAll());
     }
 }
