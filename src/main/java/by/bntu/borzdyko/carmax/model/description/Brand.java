@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -24,6 +26,8 @@ public class Brand {
     private Long id;
 
     @Column(name = "name")
+    @NotEmpty(message = "Brand name cannot be empty")
+    @Size(min = 2, max = 20, message = "Brand name should be between 2 and 20")
     private String name;
 
     @JsonIgnore

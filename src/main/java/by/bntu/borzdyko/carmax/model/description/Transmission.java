@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -24,6 +26,8 @@ public class Transmission {
     private Long id;
 
     @Column(name = "type")
+    @NotEmpty(message = "Transmission type cannot be empty")
+    @Size(min = 4, max = 25, message = "Transmission type should be between 4 and 25")
     private String type;
 
     @JsonIgnore
