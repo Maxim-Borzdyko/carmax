@@ -24,7 +24,7 @@ public class CarFilter {
         this.carService = carService;
     }
 
-    public List<Car> filter(Brand brand, String sort) {
+    public List<Car> filter(Brand brand) {
         List<Car> cars;
 
         if (brand != null) {
@@ -33,14 +33,10 @@ public class CarFilter {
             cars = carService.findAll();
         }
 
-        if (sort != null) {
-            cars = sort(cars, sort);
-        }
-
         return cars;
     }
 
-    private List<Car> sort(List<Car> cars, String sort) {
+    public List<Car> sort(List<Car> cars, String sort) {
         switch (sort) {
             case COLOR: {
                 cars = cars.stream()

@@ -3,6 +3,7 @@ package by.bntu.borzdyko.carmax.model;
 import by.bntu.borzdyko.carmax.model.description.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Proxy;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "car")
 @Proxy(lazy = false)
+@Builder
 public class Car {
 
     @Id

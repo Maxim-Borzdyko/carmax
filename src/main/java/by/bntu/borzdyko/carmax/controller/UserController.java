@@ -63,6 +63,6 @@ public class UserController {
     @PreAuthorize("hasAuthority('users.delete')")
     public String deleteUser(@PathVariable("id") User user) {
         userService.delete(user);
-        return "redirect:/user/profile";
+        return "redirect:/user";
     }
 }

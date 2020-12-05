@@ -1,6 +1,5 @@
 package by.bntu.borzdyko.carmax.service;
 
-import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.model.description.Color;
 import by.bntu.borzdyko.carmax.repository.ColorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,11 @@ public class ColorService {
         this.colorRepository = colorRepository;
     }
 
-    public Color getOne(Long id) {
+    public Color findOne(Long id) {
         return colorRepository.getOne(id);
     }
 
-    public List<Color> getAll() {
+    public List<Color> findAll() {
         return colorRepository.findAll();
     }
 }

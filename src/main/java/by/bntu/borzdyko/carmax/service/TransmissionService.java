@@ -1,6 +1,5 @@
 package by.bntu.borzdyko.carmax.service;
 
-import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.model.description.Transmission;
 import by.bntu.borzdyko.carmax.repository.TransmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,11 @@ public class TransmissionService {
         this.transmissionRepository = transmissionRepository;
     }
 
-    public Transmission getOne(Long id) {
+    public Transmission findOne(Long id) {
         return transmissionRepository.getOne(id);
     }
 
-    public List<Transmission> getAll() {
+    public List<Transmission> findAll() {
         return transmissionRepository.findAll();
     }
 }

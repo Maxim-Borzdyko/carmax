@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/carmax")
@@ -49,8 +50,10 @@ public class CarController {
     public String getMainPage(@RequestParam(value = "brand", required = false) Brand brand,
                               @RequestParam(value = "sort", required = false) String sort,
                               Model model) {
-        model.addAttribute("brands", brandService.getAll());
-        model.addAttribute("cars", carFilter.filter(brand, sort));
+        model.addAttribute("brands", brandService.findAll());
+        List<Car> cars = carFilter.filter(brand);
+        cars = carFilter.sort(cars, sort);
+        model.addAttribute("cars", cars);
         return "carmax";
     }
 
@@ -116,11 +119,11 @@ public class CarController {
 
     private void getAllCategories(Model model) {
         model.addAttribute("cars", carService.findAll());
-        model.addAttribute("brands", brandService.getAll());
-        model.addAttribute("colors", colorService.getAll());
-        model.addAttribute("countries", countryService.getAll());
-        model.addAttribute("models", modelService.getAll());
-        model.addAttribute("transmissions", transmissionService.getAll());
-        model.addAttribute("fuels", fuelService.getAll());
+        model.addAttribute("brands", brandService.findAll());
+        model.addAttribute("colors", colorService.findAll());
+        model.addAttribute("countries", countryService.findAll());
+        model.addAttribute("models", modelService.findAll());
+        model.addAttribute("transmissions", transmissionService.findAll());
+        model.addAttribute("fuels", fuelService.findAll());
     }
 }

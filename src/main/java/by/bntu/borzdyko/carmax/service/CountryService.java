@@ -1,6 +1,5 @@
 package by.bntu.borzdyko.carmax.service;
 
-import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.model.description.Country;
 import by.bntu.borzdyko.carmax.repository.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,11 @@ public class CountryService {
         this.countryRepository = countryRepository;
     }
 
-    public Country getOne(Long id) {
+    public Country findOne(Long id) {
         return countryRepository.getOne(id);
     }
 
-    public List<Country> getAll() {
+    public List<Country> findAll() {
         return countryRepository.findAll();
     }
 }

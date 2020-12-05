@@ -1,6 +1,5 @@
 package by.bntu.borzdyko.carmax.service;
 
-import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.model.description.Fuel;
 import by.bntu.borzdyko.carmax.repository.FuelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,11 @@ public class FuelService {
         this.fuelRepository = fuelRepository;
     }
 
-    public Fuel getOne(Long id) {
+    public Fuel findOne(Long id) {
         return fuelRepository.getOne(id);
     }
 
-    public List<Fuel> getAll() {
+    public List<Fuel> findAll() {
         return fuelRepository.findAll();
     }
 }

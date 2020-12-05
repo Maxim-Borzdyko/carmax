@@ -19,11 +19,11 @@ public class BrandService {
         this.brandRepository = brandRepository;
     }
 
-    public Brand getOne(Long id) {
+    public Brand findOne(Long id) {
         return brandRepository.getOne(id);
     }
 
-    public List<Brand> getAll() {
+    public List<Brand> findAll() {
         return brandRepository.findAll();
     }
 

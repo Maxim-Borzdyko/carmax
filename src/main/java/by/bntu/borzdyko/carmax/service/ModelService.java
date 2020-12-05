@@ -19,11 +19,11 @@ public class ModelService {
         this.modelRepository = modelRepository;
     }
 
-    public Model getOne(Long id) {
+    public Model findOne(Long id) {
         return modelRepository.getOne(id);
     }
 
-    public List<Model> getAll() {
+    public List<Model> findAll() {
         return modelRepository.findAll();
     }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "brand")
 @Proxy(lazy = false)
+@Builder
 public class Brand {
 
     @Id
