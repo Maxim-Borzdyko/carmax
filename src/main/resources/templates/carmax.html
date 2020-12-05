@@ -10,10 +10,12 @@
 <div th:replace="/parts/navbar :: header"></div>
 
 <div class="container">
-    <div class="row my-2 justify-content-end">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#carFilter">
-            Find cars
-        </button>
+    <div class="row row-cols-1 row-cols-md-3 my-2 justify-content-end">
+        <div class="col">
+            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#carFilter">
+                Find cars
+            </button>
+        </div>
     </div>
 
     <div class="row justify-content-center" th:if="${cars.isEmpty()}">

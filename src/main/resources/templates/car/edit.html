@@ -19,14 +19,20 @@
                 <div class="form-group col-md-6">
                     <label for="inputPrice">Price</label>
                     <input type="text" class="form-control" id="inputPrice" name="price" th:field="*{price}">
+                    <div style="color: red; font-size: 10px;" th:if="${#fields.hasErrors('price')}"
+                         th:errors="*{price}"></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputYear">Year</label>
                     <input type="text" class="form-control" id="inputYear" name="yearOfIssue" th:field="*{yearOfIssue}">
+                    <div style="color: red; font-size: 10px;" th:if="${#fields.hasErrors('yearOfIssue')}"
+                         th:errors="*{yearOfIssue}"></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputMileage">mileage</label>
                     <input type="text" class="form-control" id="inputMileage" name="mileage" th:field="*{mileage}">
+                    <div style="color: red; font-size: 10px;" th:if="${#fields.hasErrors('mileage')}"
+                         th:errors="*{mileage}"></div>
                 </div>
             </div>
             <div class="form-row">
@@ -96,11 +102,22 @@
             </div>
 
             <button type="submit" class="btn btn-primary float-right">Edit car</button>
+
+            <div class="row justify-content-center">
+                <div class="alert alert-danger alert-dismissible fade show my-5" role="alert"
+                     id="closableAlert" th:if="${#fields.hasErrors()}">
+                    Check your input again
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
+<div th:replace="/parts/scripts :: close-alert"></div>
 
 </body>
 </html>

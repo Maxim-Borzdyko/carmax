@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/carmax")
@@ -59,16 +62,19 @@ public class CarController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String getCars(Model model) {
-        model.addAttribute("car", new Car());
+    public String getCars(@ModelAttribute("car") Car car, Model model) {
         getAllCategories(model);
         return "car/cars";
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String addCar(@ModelAttribute Car car,
-                         @RequestParam("file") MultipartFile file) {
+    public String addCar(@RequestParam("file") MultipartFile file,
+                         @ModelAttribute("car") @Valid Car car,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/carmax/list";
+        }
         car.setFileName(fileService.saveImage(file));
         carService.addCar(car);
         return "redirect:/carmax/list";
@@ -84,8 +90,12 @@ public class CarController {
 
     @PostMapping("/edit")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String editCar(@ModelAttribute("car") Car car,
-                          @RequestParam("file") MultipartFile file) {
+    public String editCar(@RequestParam("file") MultipartFile file,
+                          @ModelAttribute("car") @Valid Car car,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "car/edit";
+        }
         if (!file.isEmpty()) {
             if (car.getFileName() != null) {
                 fileService.deleteImage(car.getFileName());

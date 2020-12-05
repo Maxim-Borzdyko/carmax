@@ -33,7 +33,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="alert alert-danger alert-dismissible fade show my-5" role="alert"
-             id="loginAlert" th:if="${param.error}">
+             id="closableAlert" th:if="${param.error}">
             Incorrect login or password, check it and try again
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -44,13 +44,7 @@
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
 
-<script>
-    $(function () {
-        window.setTimeout(function () {
-            $('#loginAlert').alert('close');
-        }, 3000);
-    });
-</script>
+<div th:replace="/parts/scripts :: close-alert"></div>
 
 </body>
 </html>

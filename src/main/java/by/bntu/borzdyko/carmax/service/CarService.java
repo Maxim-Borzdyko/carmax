@@ -2,7 +2,6 @@ package by.bntu.borzdyko.carmax.service;
 
 import by.bntu.borzdyko.carmax.model.Car;
 import by.bntu.borzdyko.carmax.model.description.Brand;
-import by.bntu.borzdyko.carmax.repository.BrandRepository;
 import by.bntu.borzdyko.carmax.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,20 +41,6 @@ public class CarService {
         boolean isSaved = false;
         carRepository.save(car);
         return isSaved;
-    }
-
-    // TODO update car
-    public Car updateCar(Car car, Car newCar) {
-        // ???
-        newCar.setId(car.getId());
-        // ----
-        boolean isChanged = !car.equals(newCar);
-
-        if (isChanged) {
-            carRepository.save(newCar);
-        }
-
-        return newCar;
     }
 
     public List<Car> findAllByBrand(Brand brand) {

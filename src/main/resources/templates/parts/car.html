@@ -26,16 +26,22 @@
                                 <label for="inputPrice">Price</label>
                                 <input type="text" class="form-control" id="inputPrice" name="price"
                                 th:field="*{price}">
+                                <div style="color: red; font-size: 10px;" th:if="${#fields.hasErrors('price')}"
+                                     th:errors="*{price}"></div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputYear">Year</label>
                                 <input type="text" class="form-control" id="inputYear" name="yearOfIssue"
                                 th:field="*{yearOfIssue}">
+                                <div style="color: red; font-size: 10px;" th:if="${#fields.hasErrors('yearOfIssue')}"
+                                     th:errors="*{yearOfIssue}"></div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputMileage">Mileage</label>
                                 <input type="text" class="form-control" id="inputMileage" name="mileage"
                                 th:field="*{mileage}">
+                                <div style="color: red; font-size: 10px;" th:if="${#fields.hasErrors('mileage')}"
+                                     th:errors="*{mileage}"></div>
                             </div>
                         </div>
                         <div class="form-row">

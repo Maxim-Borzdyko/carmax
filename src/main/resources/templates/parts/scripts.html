@@ -1,0 +1,17 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="close-alert">
+    <script>
+        $(function () {
+            window.setTimeout(function () {
+                $('#closableAlert').alert('close');
+            }, 3000);
+        });
+    </script>
+</div>
+
+<div th:fragment="open-modal">
+    <script>
+        $('#carModal').modal('show')
+    </script>
+</div>
+</html>

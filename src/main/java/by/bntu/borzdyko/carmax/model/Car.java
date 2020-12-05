@@ -25,19 +25,19 @@ public class Car {
     private Long id;
 
     @Column(name = "price")
-    @NotEmpty(message = "Price cannot be empty")
+    @NotNull(message = "Price cannot be null")
     @DecimalMin(value = "0.0", message = "Price should be greater than 0.0")
-    @DecimalMax(value = "10000000.0", message = "Price is so hight")
+    @DecimalMax(value = "10000000.0", message = "Price is so high")
     private BigDecimal price;
 
     @Column(name = "year_of_issue")
-    @NotEmpty(message = "Year cannot be empty")
+    @NotNull(message = "Year cannot be null")
     @Min(value = 1990, message = "Year cannot be lower than 1990")
     @Max(value = 2020, message = "Year cannot be higher than current year")
     private Integer yearOfIssue;
 
     @Column(name = "mileage")
-    // ??
+    @NotNull(message = "Mileage cannot be null")
     private Double mileage;
 
     @Column(name = "file_name")
