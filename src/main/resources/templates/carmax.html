@@ -34,7 +34,7 @@
 
                     <h4 class="card-text text-center" th:text="${car.brand.name} + ' ' + ${car.model.name}"></h4>
                     <h6 class="card-text" th:text="'Color: ' + ${car.color.name}"></h6>
-                    <h6 class="card-text" th:text="'Price: ' + ${car.price}"></h6>
+                    <h6 class="card-text" th:text="'Price: ' + ${car.price} + '$'"></h6>
 
                     <form th:action="@{'/carmax/' + ${car.id} + '/more'}" method="get">
                         <button type="submit" class="btn btn-dark border-white my-2 font-weight-bold float-right">More

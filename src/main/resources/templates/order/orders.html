@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Carmax</title>
@@ -42,7 +43,7 @@
                 </td>
                 <td th:text="${order.user.email}"></td>
                 <td th:text="${order.car.brand.name}"></td>
-                <td th:text="${order.car.price}"></td>
+                <td th:text="${order.car.price} + '$'"></td>
                 <td>
                     <div th:if="${order.status}">
                         Active
@@ -53,7 +54,7 @@
                 </td>
                 <td>
                     <div class="row">
-                        <div th:if="${isAdmin}">
+                        <div sec:authorize="${hasAuthority('orders.update')}">
                             <div th:unless="${order.status}">
                                 <form method="post" th:action="@{/orders/confirm}">
                                     <input type="hidden" name="id" th:value="${order.id}" readonly>

@@ -15,21 +15,24 @@
         <div class="row no-gutters">
             <div class="col">
                 <img th:if="${car.fileName}" th:src="@{'/img/' + ${car.fileName}}" class="card-img"
-                     style="height: 450px; width: 700px; object-fit: cover">
+                     style="height: 450px; width: 500px; object-fit: cover">
             </div>
             <div class="col">
-                <div class="card-body">
-                    <form class="my-5" method="post" th:action="@{/orders/add}" th:object="${car}">
-
-                        <input type="hidden" name="id" th:value="*{id}" readonly>
-
+                <form class="my-5" method="post" th:action="@{/orders/add}" th:object="${car}">
+                    <input type="hidden" name="id" th:value="*{id}" readonly>
+                    <div class="card-header">
                         <h4 class="card-text mt-5" th:text="${car.brand.name} + ' ' + ${car.model.name}"></h4>
-                        <p class="card-title" th:text="'Color is: ' + ${car.color.name}"></p>
-                        <p class="card-text mb-5" th:text="'Price is: ' + ${car.price}"></p>
-
+                    </div>
+                    <div class="card-body" style="font-size: 20px;">
+                        <p class="card-text" th:text="'This car has color: ' + ${car.color.name} +
+                            '. This amazing car has ' + ${car.transmission.type} + ' transmission.' +
+                            ' Also it has ' + ${car.fuel.type} + ' fuel type.' +
+                            ' This car you can by with '  + ${car.price} + '$.'"></p>
+                    </div>
+                    <div class="card-footer">
                         <button class="btn btn-dark border-white my-5 float-right" type="submit">Make order</button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

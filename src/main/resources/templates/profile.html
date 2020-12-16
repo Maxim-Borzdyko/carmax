@@ -11,44 +11,61 @@
 
 <div th:replace="/parts/navbar :: header"></div>
 
-<div class="container">
+<div class="container position-fixed" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="row justify-content-center">
         <form class="pt-30 my-5" method="post" th:action="@{/user/update}" th:object="${user}">
+            <input type="hidden" name="id" th:field="*{id}" readonly>
+            <input type="hidden" name="password" th:field="*{password}" readonly>
             <div class="form-row">
-                <div class="form-group">
+                <div class="form-group mx-3">
                     <label for="inputFirstName">First name</label>
                     <input type="text" class="form-control" id="inputFirstName" name="firstName"
                            th:field="*{firstName}" readonly>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group mx-3">
                     <label for="inputSecondName">Second name</label>
                     <input type="text" class="form-control" id="inputSecondName" name="secondName"
                            th:field="*{secondName}" readonly>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group mx-3">
                     <label for="inputEmail">Email</label>
                     <input type="email" class="form-control" id="inputEmail" name="username"
                            th:field="*{email}" readonly>
                 </div>
             </div>
+            <div class="form-row justify-content-end">
+                <div class="form-group mx-3">
+                    <button type="button" class="btn btn-primary float-right" style="width: 100px" data-toggle="modal"
+                            data-target="#userModal">
+                        Edit
+                    </button>
+                </div>
+            </div>
+            <div class="form-row justify-content-end">
+                <div class="form-group mx-3">
+                    <a sec:authorize="${hasAuthority('orders.read')}" class="btn btn-dark ml-2 float-right"
+                       th:href="@{/orders}">Order list</a>
+                    <a sec:authorize="${hasAuthority('users.read')}" class="btn btn-dark ml-2 float-right"
+                       th:href="@{/user}">User list</a>
+                    <a sec:authorize="${hasAuthority('cars.read')}" class="btn btn-dark ml-2 float-right"
+                       th:href="@{/carmax/list}">Car list</a>
+                </div>
+            </div>
         </form>
     </div>
-    <div class="row justify-content-center">
-        <button type="button" class="btn btn-primary" style="width: 100px" data-toggle="modal" data-target="#userModal">
-            Edit
-        </button>
-    </div>
-
-    <a class="btn btn-dark" th:href="@{/user}">User list</a>
-    <a class="btn btn-dark my-2" th:href="@{/orders}">Order list</a>
-    <a class="btn btn-dark my-2" th:href="@{/carmax/list}">Car list</a>
 </div>
 
 <div th:replace="/parts/user :: modal"></div>
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
+
+<div th:object="${user}">
+    <div th:if="${#fields.hasErrors('*')}">
+        <div th:replace="/parts/scripts :: open-modal"></div>
+    </div>
+</div>
 
 </body>
 </html>
