@@ -12,6 +12,10 @@
     <div class="row row-cols-1 row-cols-md-3 my-2 justify-content-end">
         <div class="col">
             <a class="btn btn-info ml-2 float-right" th:href="@{/user/profile}">To profile</a>
+            <button type="button" class="btn btn-primary ml-2 float-right" data-toggle="modal"
+                    data-target="#filterTable">
+                Find cars
+            </button>
             <button type="button" class="btn btn-primary ml-2 float-right" data-toggle="modal" data-target="#carModal">
                 Add car
             </button>
@@ -47,7 +51,7 @@
                 </td>
                 <td th:text="${car.brand.name}"></td>
                 <td th:text="${car.model.name}"></td>
-                <td th:text="${car.price}"></td>
+                <td th:text="${car.price} + '$'"></td>
                 <td th:text="${car.color.name}"></td>
                 <td th:text="${car.transmission.type}"></td>
                 <td th:text="${car.fuel.type}"></td>
@@ -55,14 +59,18 @@
                     <div class="row">
                         <form method="get" th:action="@{/carmax/edit}">
                             <input type="hidden" name="id" th:value="${car.id}" readonly>
-                            <button class="btn btn-info mx-2" type="submit">Edit</button>
+                            <button class="btn btn-outline-info mx-2" type="submit">
+                                <i class="far fa-edit" style="color: lightskyblue;"></i>
+                            </button>
                         </form>
                     </div>
                 </td>
                 <td>
                     <div class="row">
                         <form th:method="delete" th:action="@{'/carmax/' + ${car.id} + '/delete'}">
-                            <button class="btn btn-danger mx-2" type="submit">Delete</button>
+                            <button class="btn btn-outline-danger mx-2" type="submit">
+                                <i class="far fa-trash-alt" style="color: lightcoral;"></i>
+                            </button>
                         </form>
                     </div>
                 </td>
@@ -74,8 +82,12 @@
 
 <div th:replace="/parts/bootstrap :: boot-js"></div>
 <div th:replace="/parts/car :: modal"></div>
-
-<!--<div th:replace="/parts/scripts :: open-modal"></div>-->
+<div th:replace="/parts/car :: filter-modal"></div>
+<div th:object="${car}">
+    <div th:if="${#fields.hasErrors('*')}">
+        <div th:replace="/parts/scripts :: open-modal"></div>
+    </div>
+</div>
 
 </body>
 </html>
