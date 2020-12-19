@@ -1,11 +1,7 @@
 package by.bntu.borzdyko.carmax.model.description;
 
 import by.bntu.borzdyko.carmax.model.Car;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -18,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "fuel")
-@Proxy(lazy = false)
 @Builder
+@Proxy(lazy = false)
 public class Fuel {
 
     @Id
@@ -31,8 +27,8 @@ public class Fuel {
     @Size(min = 4, max = 25, message = "Fuel type should be between 4 and 25")
     private String type;
 
-    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "fuel")
     private List<Car> cars;
-
 }

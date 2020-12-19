@@ -1,10 +1,6 @@
 package by.bntu.borzdyko.carmax.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -18,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-@Proxy(lazy = false)
 @Builder
+@Proxy(lazy = false)
 public class User {
 
     @Id
@@ -54,8 +50,8 @@ public class User {
     @Column(name = "role")
     private Role role;
 
-    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Order> orders;
-
 }

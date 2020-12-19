@@ -1,11 +1,7 @@
 package by.bntu.borzdyko.carmax.model;
 
 import by.bntu.borzdyko.carmax.model.description.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -18,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "car")
-@Proxy(lazy = false)
 @Builder
+@Proxy(lazy = false)
 public class Car {
 
     @Id
@@ -40,10 +36,12 @@ public class Car {
 
     @Column(name = "mileage")
     @NotNull(message = "Mileage cannot be null")
+    @Min(value = 0, message = "Mileage cannot be lower than 0")
+    @Max(value = 500000, message = "Mileage cannot be higher than 500000")
     private Double mileage;
 
     @Column(name = "file_name")
-    @Size(min = 1, max = 220, message = "Filename should be between 1 and 220")
+    @Size(min = 0, max = 220, message = "Filename should be between 0 and 220")
     private String fileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,7 +74,8 @@ public class Car {
     @NotNull(message = "Fuel cannot be null")
     private Fuel fuel;
 
-    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "car")
     private List<Order> orders;
 }
