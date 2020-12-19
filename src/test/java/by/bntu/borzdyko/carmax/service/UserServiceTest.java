@@ -1,5 +1,6 @@
 package by.bntu.borzdyko.carmax.service;
 
+import by.bntu.borzdyko.carmax.model.Role;
 import by.bntu.borzdyko.carmax.model.User;
 import by.bntu.borzdyko.carmax.repository.UserRepository;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -39,9 +41,7 @@ public class UserServiceTest {
 
     @Test
     public void addUser_tryToSaveUser_true() {
-        User user = new User();
-        user.setEmail(TEST_EMAIL);
-        user.setPassword(PASSWORD);
+        User user = User.builder().email(TEST_EMAIL).password(PASSWORD).build();
 
         when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
 
@@ -56,9 +56,7 @@ public class UserServiceTest {
 
     @Test
     public void addUser_tryToSaveUser_false() {
-        User user = new User();
-        user.setEmail(TEST_EMAIL);
-        user.setPassword(PASSWORD);
+        User user = User.builder().email(TEST_EMAIL).password(PASSWORD).build();
 
         when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(new User()));
 
@@ -73,15 +71,19 @@ public class UserServiceTest {
 
     @Test
     public void updateUser_tryToUpdateProfile_actualUserIsChanged() {
-        User actualUser = new User();
-        actualUser.setEmail(ACTUAL_EMAIL);
-        actualUser.setFirstName(ACTUAL_FIRST_NAME);
-        actualUser.setSecondName(ACTUAL_SECOND_NAME);
+        User actualUser = User.builder()
+                .id(1L)
+                .email(ACTUAL_EMAIL)
+                .firstName(ACTUAL_FIRST_NAME)
+                .secondName(ACTUAL_SECOND_NAME).build();
 
-        User updateUser = new User();
-        updateUser.setEmail(UPDATE_EMAIL);
-        updateUser.setFirstName(UPDATE_FIRST_NAME);
-        updateUser.setSecondName(UPDATE_SECOND_NAME);
+        User updateUser = User.builder()
+                .id(1L)
+                .email(UPDATE_EMAIL)
+                .firstName(UPDATE_FIRST_NAME)
+                .secondName(UPDATE_SECOND_NAME).build();
+
+        when(userRepository.save(actualUser)).thenReturn(actualUser);
 
         actualUser = userService.updateUser(actualUser, updateUser);
 
@@ -92,20 +94,157 @@ public class UserServiceTest {
 
     @Test
     public void updateUser_tryToUpdateProfile_actualUserIsNotChanged() {
-        User actualUser = new User();
-        actualUser.setEmail(ACTUAL_EMAIL);
-        actualUser.setFirstName(ACTUAL_FIRST_NAME);
-        actualUser.setSecondName(ACTUAL_SECOND_NAME);
+        User actualUser = User.builder()
+                .email(ACTUAL_EMAIL)
+                .firstName(ACTUAL_FIRST_NAME)
+                .secondName(ACTUAL_SECOND_NAME).build();
 
-        User updateUser = new User();
-        updateUser.setEmail(ACTUAL_EMAIL);
-        updateUser.setFirstName(ACTUAL_FIRST_NAME);
-        updateUser.setSecondName(ACTUAL_SECOND_NAME);
+        User updateUser = User.builder()
+                .email(ACTUAL_EMAIL)
+                .firstName(ACTUAL_FIRST_NAME)
+                .secondName(ACTUAL_SECOND_NAME).build();
 
         actualUser = userService.updateUser(actualUser, updateUser);
 
         assertEquals(updateUser, actualUser);
         verify(userRepository, times(0)).save(actualUser);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findOne_checkWithIdInDatabase_user() {
+        Long id = 1L;
+        User expected = User.builder().id(id).build();
+
+        when(userRepository.getOne(id)).thenReturn(expected);
+
+        User actual = userService.findOne(id);
+
+        assertEquals(expected, actual);
+        verify(userRepository, times(1)).getOne(id);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findOne_checkWithIdNotInDatabase_null() {
+        Long id = 10L;
+        User expected = null;
+
+        User actual = userService.findOne(id);
+
+        assertEquals(expected, actual);
+        verify(userRepository, times(1)).getOne(id);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findOne_checkWithIdIsNull_IllegalArgumentException() {
+        Long id = null;
+
+        when(userRepository.getOne(id)).thenThrow(new IllegalArgumentException());
+
+        User actual = userService.findOne(id);
+        verify(userRepository, times(1)).getOne(id);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findAll_usersExistsInDatabase_user() {
+        List<User> expected = List.of(new User(), new User());
+
+        when(userRepository.findAll()).thenReturn(expected);
+
+        List<User> actual = userService.findAll();
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
+        verify(userRepository, times(1)).findAll();
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findAll_ordersNotExistsInDatabase_emptyList() {
+        List<User> expected = List.of();
+
+        when(userRepository.findAll()).thenReturn(expected);
+
+        List<User> actual = userService.findAll();
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
+        verify(userRepository, times(1)).findAll();
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findAllByRole_findByNormalRole_users() {
+        Role role = Role.USER;
+        List<User> expected = List.of(User.builder().role(Role.USER).build(), User.builder().role(Role.USER).build());
+
+        when(userRepository.findAllByRole(role)).thenReturn(expected);
+
+        List<User> actual = userService.findAllByRole(role);
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
+        verify(userRepository, times(1)).findAllByRole(role);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findAllByRole_tryWithRoleNotInDatabase_emptyList() {
+        Role role = Role.ADMIN;
+        List<User> expected = List.of();
+
+        when(userRepository.findAllByRole(role)).thenReturn(expected);
+
+        List<User> actual = userService.findAllByRole(role);
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
+        verify(userRepository, times(1)).findAllByRole(role);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void findAllByRole_tryWithRoleIsNull_emptyList() {
+        Role role = null;
+        List<User> expected = List.of();
+
+        when(userRepository.findAllByRole(role)).thenReturn(expected);
+
+        List<User> actual = userService.findAllByRole(role);
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
+        verify(userRepository, times(1)).findAllByRole(role);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void save_checkWithNormalOrder_saved() {
+        User user = new User();
+
+        userService.save(user);
+
+        verify(userRepository, times(1)).save(user);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void save_checkWithOrderIsNull_IllegalArgumentException() {
+        User user = null;
+
+        when(userRepository.save(user)).thenThrow(new IllegalArgumentException());
+
+        userService.save(user);
+
+        verify(userRepository, times(1)).save(user);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void delete_checkWithCorrectUser_deleted() {
+        User user = new User();
+
+        userService.delete(user);
+
+        verify(userRepository, times(1)).delete(user);
         verifyNoMoreInteractions(userRepository);
     }
 }
