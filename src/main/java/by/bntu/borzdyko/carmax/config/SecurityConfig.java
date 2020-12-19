@@ -33,20 +33,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/carmax", "/carmax/**", "/auth/**", "/img/**").permitAll()
+                .antMatchers("/carmax", "/carmax/**", "/auth/**", "/img/**", "/static/**", "/static").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/auth/login").permitAll()
-                .defaultSuccessUrl("/carmax", true)
+                    .formLogin()
+                    .loginPage("/auth/login").permitAll()
+                    .defaultSuccessUrl("/carmax", true)
                 .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/carmax");
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessUrl("/carmax");
     }
 
     @Bean
