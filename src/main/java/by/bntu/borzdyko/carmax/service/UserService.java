@@ -68,10 +68,9 @@ public class UserService {
             actualUser.setFirstName(updateUser.getFirstName());
             actualUser.setSecondName(updateUser.getSecondName());
 
-            userRepository.save(actualUser);
+            actualUser = userRepository.save(actualUser);
         }
 
         return actualUser;
     }
-
 }

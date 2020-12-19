@@ -27,12 +27,22 @@ public class BrandService {
         return brandRepository.findAll();
     }
 
+    public void save(Brand brand) {
+        brandRepository.save(brand);
+    }
+
+    public void delete(Brand brand) {
+        brandRepository.delete(brand);
+    }
+
     public boolean isBrandEmpty(Brand brand) {
         boolean isEmpty = true;
 
         if(brand ==  null) {
             throw new NullPointerException("Brand is null");
-        } else if (brand.getId() != null && brand.getName() != null && brand.getCars() != null) {
+        }
+
+        if (brand.getId() != null && brand.getName() != null && brand.getCars() != null) {
             isEmpty = false;
         }
 
@@ -49,12 +59,11 @@ public class BrandService {
     public boolean addBrand(Brand brand) {
         boolean isSaved = false;
 
-        if (brand != null && !isBrandEmpty(brand) && isBrandNotInDatabase(brand)) {
+        if (brand != null && isBrandNotInDatabase(brand)) {
             brandRepository.save(brand);
             isSaved = true;
         }
 
         return isSaved;
     }
-
 }

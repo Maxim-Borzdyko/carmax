@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -28,13 +29,13 @@ public class FileService {
         return fileName;
     }
 
-    public void deleteImage(String fileName){
+    public void deleteImage(String fileName) {
         try {
             String stringPath = createPaths(fileName);
             Path filePath = Paths.get(stringPath);
             Files.delete(filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getStackTrace();
         }
     }
 

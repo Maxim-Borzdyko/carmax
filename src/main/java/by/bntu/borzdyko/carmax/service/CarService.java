@@ -24,23 +24,16 @@ public class CarService {
         return carRepository.getOne(id);
     }
 
+    public List<Car> findAll() {
+        return carRepository.findAll();
+    }
+
     public void save(Car car) {
         carRepository.save(car);
     }
 
     public void delete(Car car) {
         carRepository.delete(car);
-    }
-
-    public List<Car> findAll() {
-        return carRepository.findAll();
-    }
-
-    // TODO make check for exist
-    public boolean addCar(Car car) {
-        boolean isSaved = false;
-        carRepository.save(car);
-        return isSaved;
     }
 
     public List<Car> findAllByBrand(Brand brand) {
