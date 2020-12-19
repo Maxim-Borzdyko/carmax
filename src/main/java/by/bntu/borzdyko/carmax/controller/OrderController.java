@@ -25,12 +25,10 @@ public class OrderController {
 
     @GetMapping
     public String getOrders(@AuthenticationPrincipal SecurityUser user, Model model) {
-        if (user.getAuthorities().equals(Role.ADMIN.getAuthorities())) {
+        if (user.getUser().getRole().equals(Role.ADMIN)) {
             model.addAttribute("orders", orderService.findAll());
-            model.addAttribute("isAdmin", true);
         } else {
             model.addAttribute("orders", orderService.findUserOrders(user.getUser()));
-            model.addAttribute("isAdmin", false);
         }
         return "/order/orders";
     }
@@ -47,7 +45,7 @@ public class OrderController {
     }
 
     @PostMapping("/confirm")
-    @PreAuthorize("hasAuthority('orders.edit')")
+    @PreAuthorize("hasAuthority('orders.update')")
     public String confirmOrder(@ModelAttribute("order") Order order) {
         Order actualOrder = orderService.findOne(order.getId());
         actualOrder.setStatus(true);
@@ -61,5 +59,4 @@ public class OrderController {
         orderService.delete(order);
         return "redirect:/orders";
     }
-
 }

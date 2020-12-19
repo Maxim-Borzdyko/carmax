@@ -44,5 +44,4 @@ public class AuthenticationController {
         userService.addUser(user);
         return "redirect:/carmax";
     }
-
 }

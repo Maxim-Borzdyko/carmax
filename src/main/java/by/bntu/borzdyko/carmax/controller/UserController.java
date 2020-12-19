@@ -34,7 +34,9 @@ public class UserController {
 
     @GetMapping("/profile")
     public String getProfile(@AuthenticationPrincipal SecurityUser user, Model model) {
-        model.addAttribute("user", user.getUser());
+        User profileUser = user.getUser();
+        profileUser.setPassword("password");
+        model.addAttribute("user", profileUser);
         return "profile";
     }
 
@@ -46,7 +48,8 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "profile";
         }
-        securityUser.setUser(userService.updateUser(securityUser.getUser(), user));
+        User actualUser = userService.findOne(securityUser.getUser().getId());
+        securityUser.setUser(userService.updateUser(actualUser, user));
         return "redirect:/user/profile";
     }
 

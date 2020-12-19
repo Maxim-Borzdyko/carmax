@@ -11,9 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/carmax")
@@ -51,21 +51,28 @@ public class CarController {
                               @RequestParam(value = "sort", required = false) String sort,
                               Model model) {
         model.addAttribute("brands", brandService.findAll());
-        List<Car> cars = carFilter.filter(brand);
-        cars = carFilter.sort(cars, sort);
-        model.addAttribute("cars", cars);
+        model.addAttribute("cars", carFilter.sort(carFilter.filter(brand), sort));
         return "carmax";
     }
 
     @GetMapping("/{id}/more")
     public String getCarPage(@PathVariable("id") Car car, Model model) {
+        if (car == null) {
+            return "redirect:/carmax";
+        }
         model.addAttribute("car", car);
         return "more";
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('cars.write')")
-    public String getCars(@ModelAttribute("car") Car car, Model model) {
+    @PreAuthorize("hasAuthority('cars.read')")
+    public String getCars(@RequestParam(value = "brand", required = false) Brand brand,
+                          @RequestParam(value = "sort", required = false) String sort,
+                          Model model) {
+        if (!model.containsAttribute("car")) {
+            model.addAttribute("car", new Car());
+        }
+        model.addAttribute("cars", carFilter.sort(carFilter.filter(brand), sort));
         getAllCategories(model);
         return "car/cars";
     }
@@ -74,19 +81,26 @@ public class CarController {
     @PreAuthorize("hasAuthority('cars.write')")
     public String addCar(@RequestParam("file") MultipartFile file,
                          @ModelAttribute("car") @Valid Car car,
-                         BindingResult bindingResult) {
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("car", car);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.car",
+                    bindingResult);
             return "redirect:/carmax/list";
         }
         car.setFileName(fileService.saveImage(file));
-        carService.addCar(car);
+        carService.save(car);
         return "redirect:/carmax/list";
     }
 
     @GetMapping("/edit")
     @PreAuthorize("hasAuthority('cars.write')")
-    public String getEditPage(@ModelAttribute Car car, Model model) {
-        model.addAttribute("car", carService.findOne(car.getId()));
+    public String getEditPage(@RequestParam("id") Car car, Model model) {
+        if (car == null) {
+            return "redirect:/carmax/list";
+        }
+        model.addAttribute("car", car);
         getAllCategories(model);
         return "car/edit";
     }
@@ -100,9 +114,7 @@ public class CarController {
             return "car/edit";
         }
         if (!file.isEmpty()) {
-            if (car.getFileName() != null) {
-                fileService.deleteImage(car.getFileName());
-            }
+            fileService.deleteImage(car.getFileName());
             car.setFileName(fileService.saveImage(file));
         }
         carService.save(car);
@@ -118,7 +130,6 @@ public class CarController {
     }
 
     private void getAllCategories(Model model) {
-        model.addAttribute("cars", carService.findAll());
         model.addAttribute("brands", brandService.findAll());
         model.addAttribute("colors", colorService.findAll());
         model.addAttribute("countries", countryService.findAll());
