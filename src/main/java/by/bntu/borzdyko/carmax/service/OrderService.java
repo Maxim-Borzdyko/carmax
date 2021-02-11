@@ -4,6 +4,9 @@ import by.bntu.borzdyko.carmax.model.Order;
 import by.bntu.borzdyko.carmax.model.User;
 import by.bntu.borzdyko.carmax.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,7 @@ import java.util.List;
 public class OrderService {
 
     private static final boolean ACTIVE = true;
+    private static final int AMOUNT_ON_PAGE = 6;
 
     private final OrderRepository orderRepository;
 
@@ -26,8 +30,9 @@ public class OrderService {
         return orderRepository.getOne(id);
     }
 
-    public List<Order> findAll() {
-        return orderRepository.findAll();
+    public Page<Order> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, AMOUNT_ON_PAGE);
+        return orderRepository.findAll(pageable);
     }
 
     public void save(Order order) {
@@ -42,8 +47,9 @@ public class OrderService {
         return orderRepository.findAllByStatus(ACTIVE);
     }
 
-    public List<Order> findUserOrders(User user) {
-        return orderRepository.findAllByUser(user);
+    public Page<Order> findUserOrders(int page, User user) {
+        Pageable pageable = PageRequest.of(page, AMOUNT_ON_PAGE);
+        return orderRepository.findAllByUser(user, pageable);
     }
 
     public boolean isPresent(Order order) {

@@ -8,13 +8,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = {"/create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class UserControllerTest {
 
+    private static final Pageable PAGEABLE = PageRequest.of(0, 6);
     private static final User ADMIN = User.builder().id(1L).email("admin@test.com").status(true).role(Role.ADMIN)
             .firstName("first").secondName("second").build();
     private static final User FIRST_USER = User.builder().id(2L).email("user1@test.com").status(true).role(Role.USER)
@@ -211,7 +212,7 @@ public class UserControllerTest {
     @Test
     @WithUserDetails("admin@test.com")
     public void deleteUser_tryWithAdmin_redirect3xxUsers() throws Exception {
-        int expectedSize = userRepository.findAllByRole(Role.USER).size() - 1;
+        int expectedSize = userRepository.findAllByRole(Role.USER, PAGEABLE).toList().size() - 1;
 
         this.mockMvc.perform(delete("/user/2/delete"))
                 .andDo(print())
@@ -219,6 +220,6 @@ public class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user"));
 
-        assertEquals(expectedSize, userRepository.findAllByRole(Role.USER).size());
+        assertEquals(expectedSize, userRepository.findAllByRole(Role.USER, PAGEABLE).toList().size());
     }
 }

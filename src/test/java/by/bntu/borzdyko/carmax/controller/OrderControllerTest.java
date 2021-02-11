@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class OrderControllerTest {
 
+    private static final Pageable PAGEABLE = PageRequest.of(0, 6);
     private final Order USER_ORDER = Order.builder().id(2L).status(true).build();
 
     @Autowired
@@ -70,7 +73,7 @@ public class OrderControllerTest {
                 )))
                 .andExpect(view().name("/order/orders"));
 
-        assertNotNull(orderRepository.findAllByUser(USER_ORDER.getUser()));
+        assertNotNull(orderRepository.findAllByUser(USER_ORDER.getUser(), PAGEABLE));
     }
 
     @Test

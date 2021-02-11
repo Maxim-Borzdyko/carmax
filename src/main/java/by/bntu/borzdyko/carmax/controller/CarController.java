@@ -5,6 +5,7 @@ import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.service.*;
 import by.bntu.borzdyko.carmax.util.CarFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,11 +48,12 @@ public class CarController {
     }
 
     @GetMapping
-    public String getMainPage(@RequestParam(value = "brand", required = false) Brand brand,
+    public String getMainPage(@RequestParam(defaultValue = "0") int page,
+                              @RequestParam(value = "brand", required = false) Brand brand,
                               @RequestParam(value = "sort", required = false) String sort,
                               Model model) {
         model.addAttribute("brands", brandService.findAll());
-        model.addAttribute("cars", carFilter.sort(carFilter.filter(brand), sort));
+        getAllCarsOnPage(page, brand, sort, model);
         return "carmax";
     }
 
@@ -66,13 +68,14 @@ public class CarController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('cars.read')")
-    public String getCars(@RequestParam(value = "brand", required = false) Brand brand,
+    public String getCars(@RequestParam(defaultValue = "0") int page,
+                          @RequestParam(value = "brand", required = false) Brand brand,
                           @RequestParam(value = "sort", required = false) String sort,
                           Model model) {
         if (!model.containsAttribute("car")) {
             model.addAttribute("car", new Car());
         }
-        model.addAttribute("cars", carFilter.sort(carFilter.filter(brand), sort));
+        getAllCarsOnPage(page, brand, sort, model);
         getAllCategories(model);
         return "car/cars";
     }
@@ -136,5 +139,16 @@ public class CarController {
         model.addAttribute("models", modelService.findAll());
         model.addAttribute("transmissions", transmissionService.findAll());
         model.addAttribute("fuels", fuelService.findAll());
+    }
+
+    private void getAllCarsOnPage(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(value = "brand", required = false) Brand brand,
+                                  @RequestParam(value = "sort", required = false) String sort,
+                                  Model model) {
+        Page<Car> carsPage = carFilter.filter(page, brand);
+        model.addAttribute("cars", carFilter.sort(carsPage.getContent(), sort));
+        model.addAttribute("currentPage", carsPage.getNumber());
+        model.addAttribute("totalPages", carsPage.getTotalPages());
+        model.addAttribute("totalElements", carsPage.getTotalElements());
     }
 }

@@ -8,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -29,6 +33,9 @@ public class UserServiceTest {
     private static final String UPDATE_EMAIL = "update@mail.com";
     private static final String UPDATE_FIRST_NAME = "updateName";
     private static final String UPDATE_SECOND_NAME = "update";
+
+    private static final int PAGE = 0;
+    private static final Pageable PAGEABLE = PageRequest.of(PAGE, 6);
 
     @Mock
     private UserRepository userRepository;
@@ -177,42 +184,42 @@ public class UserServiceTest {
     @Test
     public void findAllByRole_findByNormalRole_users() {
         Role role = Role.USER;
-        List<User> expected = List.of(User.builder().role(Role.USER).build(), User.builder().role(Role.USER).build());
+        Page<User> expected = new PageImpl<>(List.of(User.builder().role(Role.USER).build(), User.builder().role(Role.USER).build()));
 
-        when(userRepository.findAllByRole(role)).thenReturn(expected);
+        when(userRepository.findAllByRole(role, PAGEABLE)).thenReturn(expected);
 
-        List<User> actual = userService.findAllByRole(role);
+        Page<User> actual = userService.findAllByRole(PAGE, role);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(userRepository, times(1)).findAllByRole(role);
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(userRepository, times(1)).findAllByRole(role, PAGEABLE);
         verifyNoMoreInteractions(userRepository);
     }
 
     @Test
     public void findAllByRole_tryWithRoleNotInDatabase_emptyList() {
         Role role = Role.ADMIN;
-        List<User> expected = List.of();
+        Page<User> expected = new PageImpl<>(List.of());
 
-        when(userRepository.findAllByRole(role)).thenReturn(expected);
+        when(userRepository.findAllByRole(role, PAGEABLE)).thenReturn(expected);
 
-        List<User> actual = userService.findAllByRole(role);
+        Page<User> actual = userService.findAllByRole(PAGE, role);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(userRepository, times(1)).findAllByRole(role);
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(userRepository, times(1)).findAllByRole(role, PAGEABLE);
         verifyNoMoreInteractions(userRepository);
     }
 
     @Test
     public void findAllByRole_tryWithRoleIsNull_emptyList() {
         Role role = null;
-        List<User> expected = List.of();
+        Page<User> expected = new PageImpl<>(List.of());
 
-        when(userRepository.findAllByRole(role)).thenReturn(expected);
+        when(userRepository.findAllByRole(role, PAGEABLE)).thenReturn(expected);
 
-        List<User> actual = userService.findAllByRole(role);
+        Page<User> actual = userService.findAllByRole(PAGE, role);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(userRepository, times(1)).findAllByRole(role);
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(userRepository, times(1)).findAllByRole(role, PAGEABLE);
         verifyNoMoreInteractions(userRepository);
     }
 

@@ -8,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,6 +27,9 @@ public class CarServiceTest {
 
     @InjectMocks
     CarService carService;
+
+    private static final int PAGE = 0;
+    private static final Pageable PAGEABLE = PageRequest.of(PAGE, 9);
 
     @Test
     public void findOne_checkWithIdInDatabase_car() {
@@ -63,55 +70,63 @@ public class CarServiceTest {
 
     @Test
     public void findAll_carsExistsInDatabase_cars() {
-        List<Car> expected = List.of(new Car(), new Car());
+        List<Car> cars = List.of(new Car(), new Car());
 
-        when(carRepository.findAll()).thenReturn(expected);
+        Page<Car> expected = new PageImpl<>(cars);
 
-        List<Car> actual = carService.findAll();
+        when(carRepository.findAll(PAGEABLE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(carRepository, times(1)).findAll();
+        Page<Car> actual = carService.findAll(PAGE);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(carRepository, times(1)).findAll(PAGEABLE);
         verifyNoMoreInteractions(carRepository);
     }
 
     @Test
     public void findAll_carsNotExistsInDatabase_emptyList() {
-        List<Car> expected = List.of();
+        List<Car> cars = List.of();
 
-        when(carRepository.findAll()).thenReturn(expected);
+        Page<Car> expected = new PageImpl<>(cars);
 
-        List<Car> actual = carService.findAll();
+        when(carRepository.findAll(PAGEABLE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(carRepository, times(1)).findAll();
+        Page<Car> actual = carService.findAll(PAGE);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(carRepository, times(1)).findAll(PAGEABLE);
         verifyNoMoreInteractions(carRepository);
     }
 
     @Test
     public void findAllByBrand_tryWithNormalBrand_cars() {
         Brand brand = Brand.builder().name("brand").build();
-        List<Car> expected = List.of(new Car(), new Car());
+        List<Car> cars = List.of(new Car(), new Car());
 
-        when(carRepository.findAllByBrand(brand)).thenReturn(expected);
+        Page<Car> expected = new PageImpl<>(cars);
 
-        List<Car> actual = carService.findAllByBrand(brand);
+        when(carRepository.findAllByBrand(brand, PAGEABLE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(carRepository, times(1)).findAllByBrand(brand);
+        Page<Car> actual = carService.findAllByBrand(PAGE, brand);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(carRepository, times(1)).findAllByBrand(brand, PAGEABLE);
         verifyNoMoreInteractions(carRepository);
     }
 
     @Test
     public void findAllByBrand_tryWithBrandIsNull_emptyList() {
         Brand brand = null;
-        List<Car> expected = List.of();
+        List<Car> cars = List.of();
 
-        when(carRepository.findAllByBrand(brand)).thenReturn(expected);
+        Page<Car> expected = new PageImpl<>(cars);
 
-        List<Car> actual = carService.findAllByBrand(brand);
+        when(carRepository.findAllByBrand(brand, PAGEABLE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(carRepository, times(1)).findAllByBrand(brand);
+        Page<Car> actual = carService.findAllByBrand(PAGE, brand);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(carRepository, times(1)).findAllByBrand(brand, PAGEABLE);
         verifyNoMoreInteractions(carRepository);
     }
 

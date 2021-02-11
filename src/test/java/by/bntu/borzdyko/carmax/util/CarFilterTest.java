@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,39 +27,45 @@ public class CarFilterTest {
     @InjectMocks
     CarFilter carFilter;
 
+    private static final int PAGE = 0;
+
     @Test
     public void filter_tryWithBrand_filteredCars() {
         Brand brand = Brand.builder().name("FIRST").build();
 
-        List<Car> expected = List.of(
+        List<Car> cars = List.of(
                 Car.builder().brand(Brand.builder().name("FIRST").build()).price(new BigDecimal("100")).build(),
                 Car.builder().brand(Brand.builder().name("FIRST").build()).price(new BigDecimal("200")).build()
         );
 
-        when(carService.findAllByBrand(brand)).thenReturn(expected);
+        Page<Car> expected = new PageImpl<>(cars);
 
-        List<Car> actual = carFilter.filter(brand);
+        when(carService.findAllByBrand(PAGE, brand)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(carService, times(1)).findAllByBrand(brand);
+        Page<Car> actual = carFilter.filter(PAGE, brand);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(carService, times(1)).findAllByBrand(PAGE, brand);
         verifyNoMoreInteractions(carService);
     }
 
     @Test
     public void filter_tryWithBrandIsNull_cars() {
         Brand brand = null;
-        List<Car> expected = List.of(
+        List<Car> cars = List.of(
                 Car.builder().brand(Brand.builder().name("FIRST").build()).price(new BigDecimal("200")).build(),
                 Car.builder().brand(Brand.builder().name("SECOND").build()).price(new BigDecimal("200")).build(),
                 Car.builder().brand(Brand.builder().name("FIRST").build()).price(new BigDecimal("100")).build()
         );
 
-        when(carService.findAll()).thenReturn(expected);
+        Page<Car> expected = new PageImpl<>(cars);
 
-        List<Car> actual = carFilter.filter(brand);
+        when(carService.findAll(PAGE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(carService, times(1)).findAll();
+        Page<Car> actual = carFilter.filter(PAGE, brand);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(carService, times(1)).findAll(PAGE);
         verifyNoMoreInteractions(carService);
     }
 

@@ -4,14 +4,17 @@ import by.bntu.borzdyko.carmax.model.Car;
 import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
 public class CarService {
+
+    private static final int AMOUNT_ON_PAGE = 9;
 
     private final CarRepository carRepository;
 
@@ -24,8 +27,9 @@ public class CarService {
         return carRepository.getOne(id);
     }
 
-    public List<Car> findAll() {
-        return carRepository.findAll();
+    public Page<Car> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, AMOUNT_ON_PAGE);
+        return carRepository.findAll(pageable);
     }
 
     public void save(Car car) {
@@ -36,7 +40,8 @@ public class CarService {
         carRepository.delete(car);
     }
 
-    public List<Car> findAllByBrand(Brand brand) {
-        return carRepository.findAllByBrand(brand);
+    public Page<Car> findAllByBrand(int page, Brand brand) {
+        Pageable pageable = PageRequest.of(page, AMOUNT_ON_PAGE);
+        return carRepository.findAllByBrand(brand, pageable);
     }
 }

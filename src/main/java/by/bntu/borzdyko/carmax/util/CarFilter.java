@@ -4,8 +4,8 @@ import by.bntu.borzdyko.carmax.model.Car;
 import by.bntu.borzdyko.carmax.model.description.Brand;
 import by.bntu.borzdyko.carmax.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,13 +26,13 @@ public class CarFilter {
         this.carService = carService;
     }
 
-    public List<Car> filter(Brand brand) {
-        List<Car> cars;
+    public Page<Car> filter(int page, Brand brand) {
+        Page<Car> cars;
 
         if (brand != null) {
-            cars = carService.findAllByBrand(brand);
+            cars = carService.findAllByBrand(page, brand);
         } else {
-            cars = carService.findAll();
+            cars = carService.findAll(page);
         }
 
         return cars;

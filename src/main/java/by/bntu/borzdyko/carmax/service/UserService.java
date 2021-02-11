@@ -4,6 +4,9 @@ import by.bntu.borzdyko.carmax.model.Role;
 import by.bntu.borzdyko.carmax.model.User;
 import by.bntu.borzdyko.carmax.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import java.util.List;
 public class UserService {
 
     private static final boolean ACTIVE = true;
+    private static final int AMOUNT_ON_PAGE = 6;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -41,8 +45,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<User> findAllByRole(Role role) {
-        return userRepository.findAllByRole(role);
+    public Page<User> findAllByRole(int page, Role role) {
+        Pageable pageable = PageRequest.of(page, AMOUNT_ON_PAGE);
+        return userRepository.findAllByRole(role, pageable);
     }
 
     public boolean addUser(User user) {

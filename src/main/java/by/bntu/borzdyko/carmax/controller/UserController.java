@@ -5,6 +5,7 @@ import by.bntu.borzdyko.carmax.model.User;
 import by.bntu.borzdyko.carmax.security.SecurityUser;
 import by.bntu.borzdyko.carmax.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,14 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('users.read')")
-    public String getUsers(Model model) {
-        model.addAttribute("users", userService.findAllByRole(Role.USER));
+    @PreAuthorize("hasAuthority('users.read')")
+    public String getUsers(@RequestParam(defaultValue = "0") int page,
+                           Model model) {
+        Page<User> usersPage = userService.findAllByRole(page, Role.USER);
+        model.addAttribute("users", usersPage.getContent());
+        model.addAttribute("currentPage", usersPage.getNumber());
+        model.addAttribute("totalPages", usersPage.getTotalPages());
+        model.addAttribute("totalElements", usersPage.getTotalElements());
         return "user/users";
     }
 

@@ -6,6 +6,7 @@ import by.bntu.borzdyko.carmax.model.Role;
 import by.bntu.borzdyko.carmax.security.SecurityUser;
 import by.bntu.borzdyko.carmax.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,12 +25,22 @@ public class OrderController {
     }
 
     @GetMapping
-    public String getOrders(@AuthenticationPrincipal SecurityUser user, Model model) {
+    public String getOrders(@RequestParam(defaultValue = "0") int page,
+                            @AuthenticationPrincipal SecurityUser user,
+                            Model model) {
+        Page<Order> ordersPage;
+
         if (user.getUser().getRole().equals(Role.ADMIN)) {
-            model.addAttribute("orders", orderService.findAll());
+            ordersPage = orderService.findAll(page);
         } else {
-            model.addAttribute("orders", orderService.findUserOrders(user.getUser()));
+            ordersPage = orderService.findUserOrders(page, user.getUser());
         }
+
+        model.addAttribute("orders", ordersPage.getContent());
+        model.addAttribute("currentPage", ordersPage.getNumber());
+        model.addAttribute("totalPages", ordersPage.getTotalPages());
+        model.addAttribute("totalElements", ordersPage.getTotalElements());
+
         return "/order/orders";
     }
 

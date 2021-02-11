@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -38,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = {"/create-car-after.sql", "/create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CarControllerTest {
 
+    private static final Pageable PAGEABLE = PageRequest.of(0, 9);
     private static final Car CAR = Car.builder()
             .id(2L).price(new BigDecimal("200")).yearOfIssue(2001).mileage(200D).fileName("")
             .brand(Brand.builder().id(1L).name("Audi").build())
@@ -130,7 +133,7 @@ public class CarControllerTest {
                 .andExpect(model().attribute("brands", hasItem(CAR.getBrand())))
                 .andExpect(view().name("carmax"));
 
-        assertTrue(carRepository.findAll().contains(CAR));
+        assertTrue(carRepository.findAll(PAGEABLE).toList().contains(CAR));
     }
 
     @Test
@@ -145,7 +148,7 @@ public class CarControllerTest {
                 .andExpect(model().attribute("brands", hasSize(2)))
                 .andExpect(view().name("carmax"));
 
-        assertTrue(carRepository.findAllByBrand(CAR.getBrand()).contains(CAR));
+        assertTrue(carRepository.findAllByBrand(CAR.getBrand(), PAGEABLE).toList().contains(CAR));
     }
 
     @Test
@@ -202,7 +205,7 @@ public class CarControllerTest {
                 .andExpect(model().attribute("transmissions", hasSize(2)))
                 .andExpect(view().name("car/cars"));
 
-        assertTrue(carRepository.findAll().contains(CAR));
+        assertTrue(carRepository.findAll(PAGEABLE).toList().contains(CAR));
     }
 
     @Test

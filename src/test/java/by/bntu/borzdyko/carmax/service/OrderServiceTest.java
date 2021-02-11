@@ -9,6 +9,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +31,9 @@ public class OrderServiceTest {
 
     @InjectMocks
     OrderService orderService;
+
+    private static final int PAGE = 0;
+    private static final Pageable PAGEABLE = PageRequest.of(PAGE, 6);
 
     @Test
     public void findOne_checkWithIdInDatabase_order() {
@@ -67,27 +74,31 @@ public class OrderServiceTest {
 
     @Test
     public void findAll_ordersExistsInDatabase_orders() {
-        List<Order> expected = List.of(new Order(), new Order());
+        List<Order> orders = List.of(new Order(), new Order());
 
-        when(orderRepository.findAll()).thenReturn(expected);
+        Page<Order> expected = new PageImpl<>(orders);
 
-        List<Order> actual = orderService.findAll();
+        when(orderRepository.findAll(PAGEABLE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(orderRepository, times(1)).findAll();
+        Page<Order> actual = orderService.findAll(PAGE);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(orderRepository, times(1)).findAll(PAGEABLE);
         verifyNoMoreInteractions(orderRepository);
     }
 
     @Test
     public void findAll_ordersNotExistsInDatabase_emptyList() {
-        List<Order> expected = List.of();
+        List<Order> orders = List.of();
 
-        when(orderRepository.findAll()).thenReturn(expected);
+        Page<Order> expected = new PageImpl<>(orders);
 
-        List<Order> actual = orderService.findAll();
+        when(orderRepository.findAll(PAGEABLE)).thenReturn(expected);
 
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(orderRepository, times(1)).findAll();
+        Page<Order> actual = orderService.findAll(PAGE);
+
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(orderRepository, times(1)).findAll(PAGEABLE);
         verifyNoMoreInteractions(orderRepository);
     }
 
@@ -126,50 +137,50 @@ public class OrderServiceTest {
     @Test
     public void findUserOrders_tryWithUserWithOrders_userOrdersList() {
         // arrange
-        List<Order> expected = ORDERS;
+        Page<Order> expected = new PageImpl<>(ORDERS);
         User user = new User();
 
-        when(orderRepository.findAllByUser(user)).thenReturn(ORDERS);
+        when(orderRepository.findAllByUser(user, PAGEABLE)).thenReturn(expected);
 
         // action
-        List<Order> actual = orderService.findUserOrders(user);
+        Page<Order> actual = orderService.findUserOrders(PAGE, user);
 
         // assert
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(orderRepository, times(1)).findAllByUser(user);
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(orderRepository, times(1)).findAllByUser(user, PAGEABLE);
         verifyNoMoreInteractions(orderRepository);
     }
 
     @Test
     public void findUserOrders_tryWithUserWithoutOrders_emptyList() {
         // arrange
-        List<Order> expected = List.of();
+        Page<Order> expected = new PageImpl<>(List.of());
         User user = new User();
 
-        when(orderRepository.findAllByUser(user)).thenReturn(List.of());
+        when(orderRepository.findAllByUser(user, PAGEABLE)).thenReturn(expected);
 
         // action
-        List<Order> actual = orderService.findUserOrders(user);
+        Page<Order> actual = orderService.findUserOrders(PAGE, user);
 
         // assert
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(orderRepository, times(1)).findAllByUser(user);
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(orderRepository, times(1)).findAllByUser(user, PAGEABLE);
         verifyNoMoreInteractions(orderRepository);
     }
 
     @Test
     public void findUserOrders_tryWithUserNull_emptyList() {
         // arrange
-        List<Order> expected = List.of();
+        Page<Order> expected = new PageImpl<>(List.of());
 
-        when(orderRepository.findAllByUser(null)).thenReturn(List.of());
+        when(orderRepository.findAllByUser(null, PAGEABLE)).thenReturn(expected);
 
         // action
-        List<Order> actual = orderService.findUserOrders(null);
+        Page<Order> actual = orderService.findUserOrders(PAGE,null);
 
         // assert
-        assertArrayEquals(expected.toArray(), actual.toArray());
-        verify(orderRepository, times(1)).findAllByUser(null);
+        assertArrayEquals(expected.toList().toArray(), actual.toList().toArray());
+        verify(orderRepository, times(1)).findAllByUser(null, PAGEABLE);
         verifyNoMoreInteractions(orderRepository);
     }
 
