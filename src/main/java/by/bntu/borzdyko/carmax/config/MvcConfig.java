@@ -10,7 +10,7 @@ import java.io.File;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-    @Value("${app.upload.dir:${user.home}}" + "\\CarmaxPictures\\Saved")
+    @Value("${upload.path}")
     private String UPLOAD_PATH;
 
     @Override

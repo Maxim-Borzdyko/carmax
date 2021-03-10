@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-    @Value("${app.upload.dir:${user.home}}" + "\\CarmaxPictures\\Saved")
+    @Value("${upload.path}")
     private String UPLOAD_PATH;
 
     public String saveImage(MultipartFile file) {
